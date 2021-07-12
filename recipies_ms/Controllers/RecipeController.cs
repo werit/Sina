@@ -13,10 +13,10 @@ namespace recipies_ms.Controllers
     [Route("api/v1/system/recipe")]
     public class RecipeController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> logger;
+        private readonly ILogger<RecipeController> logger;
         private readonly IRecipeDbContext dbContext;
 
-        public RecipeController(ILogger<WeatherForecastController> logger, IRecipeDbContext dbContext)
+        public RecipeController(ILogger<RecipeController> logger, IRecipeDbContext dbContext)
         {
             this.logger = logger;
             this.dbContext = dbContext;
