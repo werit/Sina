@@ -10,7 +10,7 @@ using recipies_ms.Db;
 namespace recipies_ms.Migrations
 {
     [DbContext(typeof(RecipeContext))]
-    [Migration("20210711214234_InitialCreate")]
+    [Migration("20210712135654_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,10 +23,10 @@ namespace recipies_ms.Migrations
 
             modelBuilder.Entity("recipies_ms.Db.Models.RecipeItem", b =>
                 {
-                    b.Property<Guid>("RecipeId")
+                    b.Property<Guid>("RecipeKey")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("recipe_id");
+                        .HasColumnName("recipe_key");
 
                     b.Property<string>("RecipeDescription")
                         .HasColumnType("text")
@@ -36,7 +36,7 @@ namespace recipies_ms.Migrations
                         .HasColumnType("text")
                         .HasColumnName("recipe_name");
 
-                    b.HasKey("RecipeId");
+                    b.HasKey("RecipeKey");
 
                     b.ToTable("recipe");
                 });

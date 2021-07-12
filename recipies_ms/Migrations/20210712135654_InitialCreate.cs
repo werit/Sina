@@ -11,13 +11,13 @@ namespace recipies_ms.Migrations
                 name: "recipe",
                 columns: table => new
                 {
-                    recipe_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    recipe_key = table.Column<Guid>(type: "uuid", nullable: false),
                     recipe_name = table.Column<string>(type: "text", nullable: true),
                     recipe_desc = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_recipe", x => x.recipe_id);
+                    table.PrimaryKey("PK_recipe", x => x.recipe_key);
                 });
         }
 
