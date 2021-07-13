@@ -36,9 +36,10 @@ namespace recipies_ms.Controllers
                     {Message = $"{nameof(recipeItemCreateDto.RecipeName)} cannot be empty."});
             }
 
-            return Created("",
-                (await dbContext.AddRecipeAsync(recipeItemCreateDto.ToRecipeItem(), cancellationToken))
-                .ToRecipeItemDto());
+            var recipeItemDto = (await dbContext.AddRecipeAsync(recipeItemCreateDto.ToRecipeItem(), cancellationToken))
+                .ToRecipeItemDto();
+            return CreatedAtAction(nameof(GetRecipeById), new {id = recipeItemDto.RecipeKey},
+                recipeItemDto);
         }
 
         [ProducesResponseType(typeof(ResponseMessageDto), StatusCodes.Status400BadRequest)]
@@ -64,6 +65,21 @@ namespace recipies_ms.Controllers
                     logger.LogError("This place should not be reachable.");
                     return NoContent();
             }
+        }
+
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(ResponseMessageDto), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(RecipeItemDto), StatusCodes.Status200OK)]
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<RecipeItemDto>> GetRecipeById(Guid id,
+            CancellationToken cancellationToken)
+        {
+            var recipeItemDto = (await dbContext.GetRecipeByKeyAsync(id, cancellationToken))?.ToRecipeItemDto();
+            if (recipeItemDto == null)
+            {
+                return NotFound();
+            }
+            return Ok(recipeItemDto);
         }
     }
 }
