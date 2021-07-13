@@ -67,7 +67,7 @@ namespace recipies_ms.Web.Dto
                 RecipeKey = recipeItem.RecipeKey,
                 RecipeName = recipeItem.RecipeName,
                 RecipeDescription = recipeItem.RecipeDescription,
-                Ingredients = recipeItem.Ingredient.Select(x =>
+                Ingredients = recipeItem.Ingredient?.Select(x =>
                     new RecipeIngredientItemDto(x.IngredientKey, x.Amount, x.Unit, x.Ingredient, x.Note)).ToList()
             };
         }
