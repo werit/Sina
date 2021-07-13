@@ -9,7 +9,7 @@ namespace recipies_ms.Db
 {
     public interface IRecipeDbContext
     {
-        Task<RecipeItem> AddRecipeAsync(string recipeName, string recipeDesc, CancellationToken cancellationToken);
+        Task<RecipeItem> AddRecipeAsync(RecipeItem recipeItem, CancellationToken cancellationToken);
         Task<RecordUpdateStatus> UpdateRecipeAsync(RecipeItem recipeItem, CancellationToken cancellationToken);
     }
 
@@ -23,22 +23,17 @@ namespace recipies_ms.Db
         public DbSet<RecipeItem> Recipes { get; set; }
 
 
-        public async Task<RecipeItem> AddRecipeAsync(string recipeName, string recipeDesc,
+        public async Task<RecipeItem> AddRecipeAsync(RecipeItem recipeItem,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var recipeItem = new RecipeItem
-            {
-                RecipeKey = new Guid(),
-                RecipeName = recipeName,
-                RecipeDescription = recipeDesc
-            };
             Recipes.Add(recipeItem);
             await SaveChangesAsync(cancellationToken);
             return recipeItem;
         }
 
-        public async Task<RecordUpdateStatus> UpdateRecipeAsync(RecipeItem recipeItem, CancellationToken cancellationToken)
+        public async Task<RecordUpdateStatus> UpdateRecipeAsync(RecipeItem recipeItem,
+            CancellationToken cancellationToken)
         {
             if (recipeItem?.RecipeKey == null || string.IsNullOrEmpty(recipeItem.RecipeName))
             {

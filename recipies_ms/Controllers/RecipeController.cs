@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using recipies_ms.Db;
-using recipies_ms.Db.Models;
 using recipies_ms.Web.Dto;
 
 namespace recipies_ms.Controllers
@@ -28,21 +27,23 @@ namespace recipies_ms.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ResponseMessageDto), StatusCodes.Status400BadRequest)]
         [HttpPost("add")]
-        public async Task<IActionResult> AddRecipe([FromQuery] string recipeName, [FromQuery] string recipeDescription,
+        public async Task<ActionResult<RecipeItemDto>> AddRecipe(RecipeItemCreateDto recipeItemCreateDto,
             CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(recipeName))
+            if (string.IsNullOrEmpty(recipeItemCreateDto.RecipeName))
             {
                 return BadRequest(new ResponseMessageDto
-                    {Message = $"{nameof(recipeName)} cannot be empty."});
+                    {Message = $"{nameof(recipeItemCreateDto.RecipeName)} cannot be empty."});
             }
 
-            return Created("", await dbContext.AddRecipeAsync(recipeName, recipeDescription, cancellationToken));
+            return Created("",
+                (await dbContext.AddRecipeAsync(recipeItemCreateDto.ToRecipeItem(), cancellationToken))
+                .ToRecipeItemDto());
         }
 
         [ProducesResponseType(typeof(ResponseMessageDto), StatusCodes.Status400BadRequest)]
         [HttpPut("update/{id:guid}")]
-        public async Task<IActionResult> PutRecipeItem(Guid id, RecipeItem recipeItem,
+        public async Task<IActionResult> PutRecipeItem(Guid id, RecipeItemDto recipeItem,
             CancellationToken cancellationToken)
         {
             if (recipeItem?.RecipeKey == null || id != recipeItem.RecipeKey)
@@ -51,7 +52,7 @@ namespace recipies_ms.Controllers
                     $"{nameof(recipeItem)} is either empty or {nameof(id)} does not correlate to {nameof(recipeItem.RecipeKey)}");
             }
 
-            var updateStatus = await dbContext.UpdateRecipeAsync(recipeItem, cancellationToken);
+            var updateStatus = await dbContext.UpdateRecipeAsync(recipeItem.ToRecipeItem(), cancellationToken);
 
             switch (updateStatus)
             {
