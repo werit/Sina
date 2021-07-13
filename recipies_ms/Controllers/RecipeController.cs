@@ -55,9 +55,9 @@ namespace recipies_ms.Controllers
 
             switch (updateStatus)
             {
-                case UpdateStatus.Updated:
+                case RecordUpdateStatus.Updated:
                     return NoContent();
-                case UpdateStatus.NotFound:
+                case RecordUpdateStatus.NotFound:
                     return NotFound();
                 default:
                     logger.LogError("This place should not be reachable.");

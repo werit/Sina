@@ -10,7 +10,7 @@ namespace recipies_ms.Db
     public interface IRecipeDbContext
     {
         Task<RecipeItem> AddRecipeAsync(string recipeName, string recipeDesc, CancellationToken cancellationToken);
-        Task<UpdateStatus> UpdateRecipeAsync(RecipeItem recipeItem, CancellationToken cancellationToken);
+        Task<RecordUpdateStatus> UpdateRecipeAsync(RecipeItem recipeItem, CancellationToken cancellationToken);
     }
 
     public class RecipeContext : DbContext, IRecipeDbContext
@@ -38,7 +38,7 @@ namespace recipies_ms.Db
             return recipeItem;
         }
 
-        public async Task<UpdateStatus> UpdateRecipeAsync(RecipeItem recipeItem, CancellationToken cancellationToken)
+        public async Task<RecordUpdateStatus> UpdateRecipeAsync(RecipeItem recipeItem, CancellationToken cancellationToken)
         {
             if (recipeItem?.RecipeKey == null || string.IsNullOrEmpty(recipeItem.RecipeName))
             {
@@ -49,13 +49,13 @@ namespace recipies_ms.Db
             try
             {
                 await SaveChangesAsync(cancellationToken);
-                return UpdateStatus.Updated;
+                return RecordUpdateStatus.Updated;
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!RecipeItemExists(recipeItem.RecipeKey))
                 {
-                    return UpdateStatus.NotFound;
+                    return RecordUpdateStatus.NotFound;
                 }
 
                 throw;

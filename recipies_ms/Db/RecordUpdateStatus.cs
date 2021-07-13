@@ -1,6 +1,6 @@
 ﻿namespace recipies_ms.Db
 {
-    public enum UpdateStatus
+    public enum RecordUpdateStatus
     {
         Updated,
         NotFound
