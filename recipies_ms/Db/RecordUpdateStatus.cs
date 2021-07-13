@@ -3,6 +3,7 @@
     public enum RecordUpdateStatus
     {
         Updated,
-        NotFound
+        NotFound,
+        Deleted
     }
 }

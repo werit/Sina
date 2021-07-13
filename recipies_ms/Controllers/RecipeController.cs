@@ -43,6 +43,8 @@ namespace recipies_ms.Controllers
         }
 
         [ProducesResponseType(typeof(ResponseMessageDto), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("update/{id:guid}")]
         public async Task<IActionResult> PutRecipeItem(Guid id, RecipeItemDto recipeItem,
             CancellationToken cancellationToken)
@@ -68,8 +70,8 @@ namespace recipies_ms.Controllers
         }
 
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(ResponseMessageDto), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(RecipeItemDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RecipeItemDto), StatusCodes.Status404NotFound)]
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<RecipeItemDto>> GetRecipeById(Guid id,
             CancellationToken cancellationToken)
@@ -80,6 +82,21 @@ namespace recipies_ms.Controllers
                 return NotFound();
             }
             return Ok(recipeItemDto);
+        }
+
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<RecipeItemDto>> DeleteRecipeById(Guid id,
+            CancellationToken cancellationToken)
+        {
+            var recordUpdateStatus = await dbContext.DeleteRecipeByKeyAsync(id, cancellationToken);
+            if (recordUpdateStatus == RecordUpdateStatus.NotFound)
+            {
+                return NotFound();
+            }
+            return NoContent();
         }
     }
 }

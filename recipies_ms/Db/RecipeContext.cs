@@ -12,6 +12,7 @@ namespace recipies_ms.Db
         Task<RecipeItem> AddRecipeAsync(RecipeItem recipeItem, CancellationToken cancellationToken);
         Task<RecordUpdateStatus> UpdateRecipeAsync(RecipeItem recipeItem, CancellationToken cancellationToken);
         Task<RecipeItem> GetRecipeByKeyAsync(Guid recipeKey, CancellationToken cancellationToken);
+        Task<RecordUpdateStatus> DeleteRecipeByKeyAsync(Guid recipeKey, CancellationToken cancellationToken);
     }
 
     public class RecipeContext : DbContext, IRecipeDbContext
@@ -62,6 +63,30 @@ namespace recipies_ms.Db
         {
             return await Recipes.Include(rec => rec.Ingredient)
                 .SingleOrDefaultAsync(rec => rec.RecipeKey == recipeKey, cancellationToken: cancellationToken);
+        }
+
+        public async Task<RecordUpdateStatus> DeleteRecipeByKeyAsync(Guid recipeKey, CancellationToken cancellationToken)
+        {
+            var recipeItem = await GetRecipeByKeyAsync(recipeKey, cancellationToken);
+            if (recipeItem == null)
+            {
+                return RecordUpdateStatus.NotFound;
+            }
+            Entry(recipeItem).State = EntityState.Deleted;
+            try
+            {
+                await SaveChangesAsync(cancellationToken);
+                return RecordUpdateStatus.Deleted;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RecipeItemExists(recipeItem.RecipeKey))
+                {
+                    return RecordUpdateStatus.NotFound;
+                }
+
+                throw;
+            }
         }
 
         private bool RecipeItemExists(Guid id)
