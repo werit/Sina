@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using MomentApi.Web.Dto;
 using Newtonsoft.Json;
+using recipies_ms.Web.Dto;
 
 namespace recipies_ms.Web.ErrorHandling
 {

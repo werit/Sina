@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using MomentApi.Web.Dto;
 using recipies_ms.Db;
 using recipies_ms.Db.Models;
+using recipies_ms.Web.Dto;
 
 namespace recipies_ms.Controllers
 {

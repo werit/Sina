@@ -1,4 +1,4 @@
-﻿namespace MomentApi.Web.Dto
+﻿namespace recipies_ms.Web.Dto
 {
     public class ResponseMessageDto
     {
