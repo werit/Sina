@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +14,8 @@ namespace recipies_ms.Db
         Task<RecordUpdateStatus> UpdateRecipeAsync(RecipeItem recipeItem, CancellationToken cancellationToken);
         Task<RecipeItem> GetRecipeByKeyAsync(Guid recipeKey, CancellationToken cancellationToken);
         Task<RecordUpdateStatus> DeleteRecipeByKeyAsync(Guid recipeKey, CancellationToken cancellationToken);
+
+        Task<IEnumerable<RecipeItem>> GetRecipesAsync(CancellationToken cancellationToken);
     }
 
     public class RecipeContext : DbContext, IRecipeDbContext
@@ -87,6 +90,11 @@ namespace recipies_ms.Db
 
                 throw;
             }
+        }
+
+        public async Task<IEnumerable<RecipeItem>> GetRecipesAsync(CancellationToken cancellationToken)
+        {
+            return await Recipes.Include(rec => rec.Ingredient).ToListAsync(cancellationToken);
         }
 
         private bool RecipeItemExists(Guid id)

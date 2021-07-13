@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
@@ -97,6 +99,24 @@ namespace recipies_ms.Controllers
                 return NotFound();
             }
             return NoContent();
+        }
+
+
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(RecipeItemDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RecipeItemDto), StatusCodes.Status404NotFound)]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<RecipeItemDto>>> GetRecipes(CancellationToken cancellationToken)
+        {
+            var recipeItemDtos =
+                (await dbContext.GetRecipesAsync(cancellationToken))?.Select(recipeItem =>
+                    recipeItem.ToRecipeItemDto());
+            if (recipeItemDtos == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(recipeItemDtos);
         }
     }
 }
