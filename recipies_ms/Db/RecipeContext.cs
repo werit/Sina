@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,8 @@ namespace recipies_ms.Db
 {
     public interface IRecipeDbContext
     {
-        Task<RecipeItem> AddRecipe(string recipeName, string recipeDesc, CancellationToken cancellationToken);
+        Task<RecipeItem> AddRecipeAsync(string recipeName, string recipeDesc, CancellationToken cancellationToken);
+        Task<UpdateStatus> UpdateRecipeAsync(RecipeItem recipeItem, CancellationToken cancellationToken);
     }
 
     public class RecipeContext : DbContext, IRecipeDbContext
@@ -21,7 +23,7 @@ namespace recipies_ms.Db
         public DbSet<RecipeItem> Recipes { get; set; }
 
 
-        public async Task<RecipeItem> AddRecipe(string recipeName, string recipeDesc,
+        public async Task<RecipeItem> AddRecipeAsync(string recipeName, string recipeDesc,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -34,6 +36,35 @@ namespace recipies_ms.Db
             Recipes.Add(recipeItem);
             await SaveChangesAsync(cancellationToken);
             return recipeItem;
+        }
+
+        public async Task<UpdateStatus> UpdateRecipeAsync(RecipeItem recipeItem, CancellationToken cancellationToken)
+        {
+            if (recipeItem?.RecipeKey == null || string.IsNullOrEmpty(recipeItem.RecipeName))
+            {
+                throw new ArgumentNullException($"{nameof(recipeItem)} cannot be null and neiter its id or name.");
+            }
+
+            Entry(recipeItem).State = EntityState.Modified;
+            try
+            {
+                await SaveChangesAsync(cancellationToken);
+                return UpdateStatus.Updated;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RecipeItemExists(recipeItem.RecipeKey))
+                {
+                    return UpdateStatus.NotFound;
+                }
+
+                throw;
+            }
+        }
+
+        private bool RecipeItemExists(Guid id)
+        {
+            return Recipes.Any(e => e.RecipeKey == id);
         }
     }
 }
