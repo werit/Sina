@@ -19,7 +19,7 @@ jobs:
           working_directory: ~/project/
           name: Run tests
           command: |
-            pwd && ls -al && dotnet test
+            dotnet test
 
 
 workflows:
