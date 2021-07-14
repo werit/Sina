@@ -2,7 +2,7 @@
 using recipies_ms.Web.Dto;
 using Xunit;
 
-namespace recipeAPITest.Dto
+namespace recipeAPITest.Web.Dto
 {
     public class ResponseMessageDtoTest
     {
