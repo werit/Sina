@@ -34,7 +34,7 @@ namespace recipies_ms.Web.Dto
                 throw new ArgumentNullException($"{nameof(recipeItemCreateDto.RecipeName)} cannot be null or empty.");
             }
 
-            if (recipeItemCreateDto.Ingredients.Any(x =>
+            if (recipeItemCreateDto.Ingredients!= null && recipeItemCreateDto.Ingredients.Any(x =>
                 string.IsNullOrEmpty(x.Ingredient) || string.IsNullOrEmpty(x.Unit)))
             {
                 throw new ArgumentException(
@@ -47,7 +47,7 @@ namespace recipies_ms.Web.Dto
                 RecipeKey = recipeKey,
                 RecipeName = recipeItemCreateDto.RecipeName,
                 RecipeDescription = recipeItemCreateDto.RecipeDescription,
-                Ingredient = recipeItemCreateDto.Ingredients.Select(x => new RecipeIngredientItem
+                Ingredient = recipeItemCreateDto.Ingredients?.Select(x => new RecipeIngredientItem
                 {
                     Amount = x.Amount, Ingredient = x.Ingredient, Note = x.Note, Unit = x.Unit,
                     IngredientKey = Guid.NewGuid(), RecipeItemId = recipeKey
