@@ -10,7 +10,13 @@ jobs:
     # Be sure to update the tag on this image to a more stable version, using latest can result in unstable builds.
     docker:
       - image: mcr.microsoft.com/dotnet/sdk:5.0
-    resource_class: small
+      - image: amd64/postgres:12.2-alpine
+        environment:
+          POSTGRES_USER: mmadmin
+          POSTGRES_PASSWORD: mmkoko
+          POSTGRES_DB: recipedb
+
+    resource_class: medium
     steps:
       # Checkout the code as the first step.
       - checkout
@@ -20,7 +26,7 @@ jobs:
           working_directory: ~/project/
           name: Run tests
           command: |
-            dotnet test
+            ASPNETCORE_ENVIRONMENT=CircleCi dotnet test
 
 workflows:
   # Below is the definition of your workflow.
