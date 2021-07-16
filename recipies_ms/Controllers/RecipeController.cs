@@ -29,7 +29,7 @@ namespace recipies_ms.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ResponseMessageDto), StatusCodes.Status400BadRequest)]
         [HttpPost("add")]
-        public async Task<ActionResult<RecipeItemDto>> AddRecipe(RecipeItemCreateDto recipeItemCreateDto,
+        public async Task<ActionResult<RecipeItemDto>> AddRecipeAsync(RecipeItemCreateDto recipeItemCreateDto,
             CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(recipeItemCreateDto.RecipeName))
@@ -40,7 +40,8 @@ namespace recipies_ms.Controllers
 
             var recipeItemDto = (await dbContext.AddRecipeAsync(recipeItemCreateDto.ToRecipeItem(), cancellationToken))
                 .ToRecipeItemDto();
-            return CreatedAtAction(nameof(GetRecipeById), new {id = recipeItemDto.RecipeKey},
+            // ReSharper disable once Mvc.ActionNotResolved
+            return CreatedAtAction(nameof(GetRecipeByIdAsync), new {id = recipeItemDto.RecipeKey},
                 recipeItemDto);
         }
 
@@ -48,7 +49,7 @@ namespace recipies_ms.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("update/{id:guid}")]
-        public async Task<IActionResult> PutRecipeItem(Guid id, RecipeItemDto recipeItem,
+        public async Task<IActionResult> PutRecipeItemAsync(Guid id, RecipeItemDto recipeItem,
             CancellationToken cancellationToken)
         {
             if (recipeItem?.RecipeKey == null || id != recipeItem.RecipeKey)
@@ -75,7 +76,7 @@ namespace recipies_ms.Controllers
         [ProducesResponseType(typeof(RecipeItemDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RecipeItemDto), StatusCodes.Status404NotFound)]
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<RecipeItemDto>> GetRecipeById(Guid id,
+        public async Task<ActionResult<RecipeItemDto>> GetRecipeByIdAsync(Guid id,
             CancellationToken cancellationToken)
         {
             var recipeItemDto = (await dbContext.GetRecipeByKeyAsync(id, cancellationToken))?.ToRecipeItemDto();
@@ -90,7 +91,7 @@ namespace recipies_ms.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{id:guid}")]
-        public async Task<ActionResult<RecipeItemDto>> DeleteRecipeById(Guid id,
+        public async Task<ActionResult<RecipeItemDto>> DeleteRecipeByIdAsync(Guid id,
             CancellationToken cancellationToken)
         {
             var recordUpdateStatus = await dbContext.DeleteRecipeByKeyAsync(id, cancellationToken);
@@ -106,7 +107,7 @@ namespace recipies_ms.Controllers
         [ProducesResponseType(typeof(RecipeItemDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RecipeItemDto), StatusCodes.Status404NotFound)]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RecipeItemDto>>> GetRecipes(CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<RecipeItemDto>>> GetRecipesAsync(CancellationToken cancellationToken)
         {
             var recipeItemDtos =
                 (await dbContext.GetRecipesAsync(cancellationToken))?.Select(recipeItem =>
