@@ -8,17 +8,17 @@ using recipies_ms.Db.Models;
 
 namespace recipies_ms.Db
 {
-    public interface IRecipeDbContext
+    public interface IRecipeDbContext<T> where T : IRecipeEntity
     {
-        Task<RecipeItem> AddRecipeAsync(RecipeItem recipeItem, CancellationToken cancellationToken);
-        Task<RecordUpdateStatus> UpdateRecipeAsync(RecipeItem recipeItem, CancellationToken cancellationToken);
-        Task<RecipeItem> GetRecipeByKeyAsync(Guid recipeKey, CancellationToken cancellationToken);
+        Task<T> AddRecipeAsync(T recipeItem, CancellationToken cancellationToken);
+        Task<RecordUpdateStatus> UpdateRecipeAsync(T recipeItem, CancellationToken cancellationToken);
+        Task<T> GetRecipeByKeyAsync(Guid recipeKey, CancellationToken cancellationToken);
         Task<RecordUpdateStatus> DeleteRecipeByKeyAsync(Guid recipeKey, CancellationToken cancellationToken);
 
-        Task<IEnumerable<RecipeItem>> GetRecipesAsync(CancellationToken cancellationToken);
+        Task<IEnumerable<T>> GetRecipesAsync(CancellationToken cancellationToken);
     }
 
-    public class RecipeContext : DbContext, IRecipeDbContext
+    public class RecipeContext : DbContext, IRecipeDbContext<RecipeItem>
     {
         public RecipeContext(DbContextOptions<RecipeContext> options)
             : base(options)
@@ -68,13 +68,15 @@ namespace recipies_ms.Db
                 .SingleOrDefaultAsync(rec => rec.RecipeKey == recipeKey, cancellationToken: cancellationToken);
         }
 
-        public async Task<RecordUpdateStatus> DeleteRecipeByKeyAsync(Guid recipeKey, CancellationToken cancellationToken)
+        public async Task<RecordUpdateStatus> DeleteRecipeByKeyAsync(Guid recipeKey,
+            CancellationToken cancellationToken)
         {
             var recipeItem = await GetRecipeByKeyAsync(recipeKey, cancellationToken);
             if (recipeItem == null)
             {
                 return RecordUpdateStatus.NotFound;
             }
+
             Entry(recipeItem).State = EntityState.Deleted;
             try
             {

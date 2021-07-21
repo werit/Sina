@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using recipies_ms.Db;
+using recipies_ms.Db.Models;
 using recipies_ms.Web.ErrorHandling;
 
 namespace recipies_ms
@@ -33,7 +34,7 @@ namespace recipies_ms
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "recipies_ms", Version = "v1"});
             });
 
-            services.AddScoped<IRecipeDbContext, RecipeContext>();
+            services.AddScoped<IRecipeDbContext<RecipeItem>, RecipeContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

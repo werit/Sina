@@ -71,6 +71,10 @@ namespace recipies_ms.Web.Dto
                     new RecipeIngredientItemDto(x.IngredientKey, x.Amount, x.Unit, x.Ingredient, x.Note)).ToList()
             };
         }
+        public static RecipeItemDto ToRecipeItemDto(this IRecipeEntity recipeItem)
+        {
+            throw new NotImplementedException();
+        }
 
         public static RecipeItem ToRecipeItem(this RecipeItemDto recipeItem)
         {
