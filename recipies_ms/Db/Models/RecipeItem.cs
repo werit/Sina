@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace recipies_ms.Db.Models
 {
     [Table("recipe")]
-    public class RecipeItem
+    public class RecipeItem : IRecipeEntity
     {
         [Key]
         [Column("recipe_key")]

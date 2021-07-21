@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using recipies_ms.Db;
+using recipies_ms.Db.Models;
 using recipies_ms.Web.Dto;
 
 namespace recipies_ms.Controllers
@@ -17,9 +18,9 @@ namespace recipies_ms.Controllers
     public class RecipeController : ControllerBase
     {
         private readonly ILogger<RecipeController> logger;
-        private readonly IRecipeDbContext dbContext;
+        private readonly IRecipeDbContext<RecipeItem> dbContext;
 
-        public RecipeController(ILogger<RecipeController> logger, IRecipeDbContext dbContext)
+        public RecipeController(ILogger<RecipeController> logger, IRecipeDbContext<RecipeItem> dbContext)
         {
             this.logger = logger;
             this.dbContext = dbContext;
