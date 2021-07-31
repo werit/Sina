@@ -17,9 +17,10 @@ namespace recipeAPITest.TestUtils.Fixtures
         public const string DatabaseSchemaName = "recipedb";
         public const string DatabaseUsername = "mmadmin";
         public const string DatabasePassword = "mmkoko";
+        private const string TestDockerHost = "localhost";
 
         public static readonly string DbaConnectionString =
-            $"Server=localhost; Port={TestDbPort}; Database={DatabaseSchemaName}; Username={DatabaseUsername}; Password={DatabasePassword};";
+            $"Server={TestDockerHost}; Port={TestDbPort}; Database={DatabaseSchemaName}; Username={DatabaseUsername}; Password={DatabasePassword};";
 
         private const string TestDbName = "db-test";
         private const string MmNetworkName = "mmnet-test";
