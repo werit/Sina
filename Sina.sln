@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "recipies_ms", "recipies_ms\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "recipeAPITest", "recipeAPITest\recipeAPITest.csproj", "{326115A3-C47E-4765-9C80-DB24424CFBC1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sina.planning", "sina.planning\sina.planning.csproj", "{78661471-526C-4AA3-BADB-7E310CA417EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{326115A3-C47E-4765-9C80-DB24424CFBC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{326115A3-C47E-4765-9C80-DB24424CFBC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{326115A3-C47E-4765-9C80-DB24424CFBC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78661471-526C-4AA3-BADB-7E310CA417EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78661471-526C-4AA3-BADB-7E310CA417EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78661471-526C-4AA3-BADB-7E310CA417EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78661471-526C-4AA3-BADB-7E310CA417EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

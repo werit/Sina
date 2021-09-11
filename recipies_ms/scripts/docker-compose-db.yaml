@@ -10,3 +10,12 @@ services:
       POSTGRES_USER: "${DBUSER}"
       POSTGRES_PASSWORD: "${DBPASS}"
       POSTGRES_DB: "${DBSCHEMA}"
+  postgre_schedule:
+    image: "postgres:12.6-alpine"
+    ports:
+      - "5435:5432"
+    restart: always
+    environment:
+      POSTGRES_USER: "${DBUSER}"
+      POSTGRES_PASSWORD: "${DBPASS}"
+      POSTGRES_DB: "${DBSCHEMA}"
