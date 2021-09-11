@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace sina.planning.Db.Models
 {
     [Table("recipe_schedule")]
-    public class RecipeScheduleItem
+    public class RecipeScheduleItem: IRecipeScheduleEntity
     {
         [Key]
         [Column("recipe_schedule_key")]

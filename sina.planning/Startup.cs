@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using recipies_ms.Web.ErrorHandling;
 using sina.planning.Db;
+using sina.planning.Db.Models;
 
 namespace sina.planning
 {
@@ -30,7 +31,7 @@ namespace sina.planning
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "sina.planning", Version = "v1"});
             });
             
-            services.AddScoped<IRecipeSchedulingDbContext, RecipeSchedulingContext>();
+            services.AddScoped<IRecipeSchedulingDbContext<RecipeScheduleItem>, RecipeSchedulingContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
