@@ -15,6 +15,12 @@ jobs:
           POSTGRES_USER: mmadmin
           POSTGRES_PASSWORD: mmkoko
           POSTGRES_DB: recipedb
+      - image: amd64/postgres:12.2-alpine
+        name: pg_planning
+        environment:
+          POSTGRES_USER: mmadmin
+          POSTGRES_PASSWORD: mmkoko
+          POSTGRES_DB: planningdb
 
     resource_class: medium
     steps:
@@ -26,7 +32,7 @@ jobs:
           working_directory: ~/project/
           name: Run tests
           command: |
-            ASPNETCORE_ENVIRONMENT=CircleCi dotnet test
+            ASPNETCORE_ENVIRONMENT=CircleCi dotnet test -- xunit.parallelizeAssembly=true
 
 workflows:
   # Below is the definition of your workflow.
