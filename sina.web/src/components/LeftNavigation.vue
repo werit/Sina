@@ -1,6 +1,44 @@
 <template>
-  <v-app>
-    <v-navigation-drawer app clipped permanent expand-on-hover>
+  <div class="ma-12 pa-12">
+    <!-- <v-toolbar dark class="primary">
+      <v-toolbar-side-icon
+        @click.stop="sideNav = !sideNav"
+        class="hidden-sm-and-up "></v-toolbar-side-icon>
+      <v-toolbar-title>
+        <router-link to="/" tag="span" style="cursor: pointer">DevMeetup</router-link>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-toolbar-items class="hidden-xs-only">
+        <v-btn
+          flat
+          v-for="item in menuItems"
+          :key="item.title"
+          :to="item.link">
+          <v-icon left dark>{{ item.icon }}</v-icon>
+          {{ item.title }}
+        </v-btn>
+      </v-toolbar-items>
+    </v-toolbar>
+
+    <v-navigation-drawer temporary v-model="sideNav">
+      <v-list>
+        <v-list-tile
+          v-for="item in menuItems"
+          :key="item.title"
+          :to="item.link">
+          <v-list-tile-action>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>{{ item.title }}</v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </v-navigation-drawer> -->
+
+    <v-card>
+      <v-container class="lighten-5 mb-6">
+        <v-row align="center" no-gutters>
+          <v-col cols="2">
+            <v-navigation-drawer permanent expand-on-hover>
               <v-list>
                 <v-list-item class="px-2">
                   <v-list-item-avatar>
@@ -25,7 +63,7 @@
               <v-divider></v-divider>
 
               <v-list nav dense>
-                        <!-- <v-list-tile
+                <!-- <v-list-tile
           v-for="item in menuItems"
           :key="item.title"
           :to="item.link">
@@ -40,9 +78,11 @@
                   </v-list-item-icon>
                   <v-list-item-title>Recipes</v-list-item-title>
                 </v-list-item> -->
-                <v-list-item v-for="item in menuItems"
-          :key="item.title"
-          :to="item.link">
+                <v-list-item
+                  v-for="item in menuItems"
+                  :key="item.title"
+                  :to="item.link"
+                >
                   <v-list-item-icon>
                     <v-icon>{{ item.icon }}</v-icon>
                   </v-list-item-icon>
@@ -56,61 +96,31 @@
                 </v-list-item> -->
               </v-list>
             </v-navigation-drawer>
-
- <v-app-bar
-      app
-      clipped-left
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
-    <v-main>
-      <router-view/>
-    </v-main>
-  </v-app>
+          </v-col>
+          <v-col><recipes /></v-col>
+        </v-row>
+      </v-container>
+    </v-card>
+  </div>
 </template>
 
 <script>
+import Recipes from './Recipes/Recipes.vue';
 
 export default {
-  name: 'App',
-
-  data: () => ({
-    menuItems: [
-      { icon: 'mdi-bowl-mix', title: 'Recipes', link: '/recipes' },
-      { icon: 'mdi-basket', title: 'Shopping', link: '/shopping' },
-      { icon: 'mdi-application', title: 'Planning', link: '/planning' },
-    ],
-  }),
+  name: 'LeftNavigation',
+  data() {
+    return {
+      menuItems: [
+        { icon: 'mdi-bowl-mix', title: 'Recipes', link: '/recipes' },
+        { icon: 'mdi-basket', title: 'Shopping', link: '/shopping' },
+        { icon: 'mdi-application', title: 'Planning', link: '/planning' },
+      ],
+    };
+  },
+  //
+  components: {
+    Recipes,
+  },
 };
 </script>
