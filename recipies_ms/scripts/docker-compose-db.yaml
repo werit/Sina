@@ -1,8 +1,10 @@
 ﻿# run with docker-compose --env-file .\.env -f .\docker-compose-db.yaml -p sina up -d
 version: "3.7"
 services:
-  postgre:
+  postgre_recipe:
     image: "postgres:12.6-alpine"
+    volumes:
+      - pg-recipe:/var/lib/postgresql/data
     ports:
       - "5434:5432"
     restart: always
@@ -19,3 +21,5 @@ services:
       POSTGRES_USER: "${DBUSER}"
       POSTGRES_PASSWORD: "${DBPASS}"
       POSTGRES_DB: "${DBSCHEMA}"
+volumes:
+  pg-recipe:

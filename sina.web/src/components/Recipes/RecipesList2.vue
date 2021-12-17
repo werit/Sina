@@ -1,7 +1,8 @@
 <template>
   <div>
     <v-row>
-      <div>
+      <p v-if="isLoadingRecipeData">Loading recipe data....</p>
+      <div v-if="!isLoadingRecipeData">
         <v-expansion-panels focusable inset style="width: 500px">
           <v-expansion-panel
             v-for="(recipe, index) in recipeItems"
@@ -16,7 +17,7 @@
                   {{ recipe.img }}
                 </v-icon>
               </template>
-              <span class="header mx-2">{{ recipe.name }}</span>
+              <span class="header mx-2">{{ recipe.recipeName }}</span>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <v-card
@@ -34,7 +35,7 @@
                     <v-list-item-content>
                       <v-list-item-title
                         >{{ ingredient.amount }}{{ ingredient.unit }}
-                        {{ ingredient.ingName }}</v-list-item-title
+                        {{ ingredient.ingredient }}</v-list-item-title
                       >
                       <v-list-item-subtitle>{{
                         ingredient.note
@@ -48,18 +49,22 @@
         </v-expansion-panels>
         <div class="pa-2 ma-2">
           <recipes-crud />
-          </div>
+        </div>
       </div>
       <!-- I could not make it work wito\hout it...it is an insufficiency,
       but I do not knwo how to solve -->
       <p v-if="currentIndex > -1 && shw"></p>
-      <recipes-instructions v-if="currentIndex > -1 && recipeItems[currentIndex].show === true">
+      <recipes-instructions
+        v-if="currentIndex > -1 && recipeItems[currentIndex].show === true"
+        :recipe-instruction="this.recipeItems[this.currentIndex].recipeDescription"
+      >
       </recipes-instructions>
     </v-row>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
 import RecipesInstructions from './RecipeInstructions.vue';
 import RecipesCrud from './RecipesCrud.vue';
 
@@ -68,6 +73,8 @@ export default {
   data: () => ({
     shw: false,
     currentIndex: -1,
+    isLoadingRecipeData: false,
+    testData: 'recipe.recipeDescription',
     recipeItems: [
       {
         title: 'kura-bazant',
@@ -147,7 +154,10 @@ export default {
       if (index === this.currentIndex) {
         this.recipeItems[index].show = !this.recipeItems[index].show;
       } else {
-        if (this.currentIndex > -1 && this.recipeItems[this.currentIndex].show === true) {
+        if (
+          this.currentIndex > -1
+          && this.recipeItems[this.currentIndex].show === true
+        ) {
           this.recipeItems[this.currentIndex].show = false;
         }
         this.recipeItems[index].show = true;
@@ -155,6 +165,24 @@ export default {
       this.shw = !this.shw;
       this.currentIndex = index;
     },
+    loadRecipeData() {
+      this.isLoadingRecipeData = true;
+      axios
+        .get('https://localhost:5009/api/v1/system/recipe', {
+          // headers: {
+          //   'Access-Control-Allow-Origin': '*',
+          // },
+        })
+        // eslint-disable-next-line no-return-assign
+        .then((response) => {
+          this.isLoadingRecipeData = false;
+          this.recipeItems = response.data;
+        })
+        .catch((error) => console.log(error));
+    },
+  },
+  mounted() {
+    this.loadRecipeData();
   },
 };
 </script>

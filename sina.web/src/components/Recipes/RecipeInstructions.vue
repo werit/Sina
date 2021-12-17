@@ -2,7 +2,7 @@
   <v-card elevation="3" outlined shaped max-width="500" class="pa-2 ma-2">
     <v-card-title>Instructions</v-card-title>
     <v-card-text>
-      <span v-for="text in texts" :key="text.title"> {{ text.text }}</span>
+      <span v-for="text in texts" :key="text.title"> {{ recipeInstruction }}</span>
     </v-card-text>
   </v-card>
 </template>
@@ -10,6 +10,9 @@
 <script>
 export default {
   name: 'RecipesInstructions',
+  props: [
+    'recipeInstruction',
+  ],
   data: () => ({
     texts: [
       {
