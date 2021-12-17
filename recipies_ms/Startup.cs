@@ -1,3 +1,5 @@
+using System;
+using System.Collections.ObjectModel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +15,9 @@ namespace recipies_ms
 {
     public class Startup
     {
+        private const int DbMaxConnectionRetryCount = 5;
+        private const int DbConnectionRetryDelay = 3;
+        readonly string MyAllowSpecificOrigins = "allowedOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -28,10 +33,12 @@ namespace recipies_ms
                 opt.SuppressAsyncSuffixInActionNames = false;
             });
             services.AddDbContext<RecipeContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString("RecipesConnection")));
+                opt.UseNpgsql(Configuration.GetConnectionString("RecipesConnection"),
+                    builder => builder.EnableRetryOnFailure(DbMaxConnectionRetryCount,
+                        TimeSpan.FromSeconds(DbConnectionRetryDelay), new Collection<string>())));
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "recipies_ms", Version = "v1"});
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "recipies_ms", Version = "v1" });
             });
 
             services.AddScoped<IRecipeDbContext<RecipeItem>, RecipeContext>();
@@ -52,6 +59,8 @@ namespace recipies_ms
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
 

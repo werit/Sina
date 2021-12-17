@@ -5,26 +5,26 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace recipeAPITest.TestUtils.Fixtures
+namespace sina.test.planning.TestUtils.PlanningFixtures
 {
     [CollectionDefinition(CommonFixtures.DatabaseCollectionName)]
-    public class DatabaseCollection : ICollectionFixture<TestSuiteSetup>
+    public class DatabaseCollection : ICollectionFixture<TestSuiteSetupPlanning>
     {
     }
 
-    public class TestSuiteSetup : IDisposable
+    public class TestSuiteSetupPlanning : IDisposable
     {
-        private const int TestDbPort = 5432;
-        public const string DatabaseSchemaName = "recipedb";
+        private static int TestDbPort = 54322;
+        public const string DatabaseSchemaName = "planningdb";
         public const string DatabaseUsername = "mmadmin";
         public const string DatabasePassword = "mmkoko";
-        private const string TestDockerHost = "localhost";
+        private static string TestDockerHost = "localhost";
 
         public static readonly string DbaConnectionString =
             $"Server={TestDockerHost}; Port={TestDbPort}; Database={DatabaseSchemaName}; Username={DatabaseUsername}; Password={DatabasePassword};";
 
-        private const string TestDbName = "db-test";
-        private const string MmNetworkName = "mmnet-test";
+        private const string TestDbName = "db-test-planning";
+        private const string MmNetworkName = "planning-test";
         private const int ExpectedMsDelayNeededForDatabaseReadiness = 3000;
         private const string DockerName = "docker";
 
@@ -33,7 +33,7 @@ namespace recipeAPITest.TestUtils.Fixtures
         private readonly IMessageSink diagnosticMessageSink;
 
 
-        public TestSuiteSetup(IMessageSink diagnosticMessageSink)
+        public TestSuiteSetupPlanning(IMessageSink diagnosticMessageSink)
         {
             this.diagnosticMessageSink = diagnosticMessageSink;
             isDisposed = false;
@@ -68,6 +68,9 @@ namespace recipeAPITest.TestUtils.Fixtures
             if (environmentSetup == "CircleCi")
             {
                 // if CircleCi, then do not spin anything. Db will be spun in CircleCi.
+                TestDockerHost = "pg_planning";
+                TestDbPort = 5432;
+                Console.WriteLine($"Port changed to: {TestDbPort}");
             }
             else
             {
