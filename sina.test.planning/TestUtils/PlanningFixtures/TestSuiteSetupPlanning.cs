@@ -20,9 +20,11 @@ namespace sina.test.planning.TestUtils.PlanningFixtures
         public const string DatabasePassword = "mmkoko";
         private static string TestDockerHost = "localhost";
 
-        public static readonly string DbaConnectionString =
-            $"Server={TestDockerHost}; Port={TestDbPort}; Database={DatabaseSchemaName}; Username={DatabaseUsername}; Password={DatabasePassword};";
-
+        public static string GetConnectionString()
+        {
+            return $"Server={TestDockerHost}; Port={TestDbPort}; Database={DatabaseSchemaName}; Username={DatabaseUsername}; Password={DatabasePassword};";
+        }
+        
         private const string TestDbName = "db-test-planning";
         private const string MmNetworkName = "planning-test";
         private const int ExpectedMsDelayNeededForDatabaseReadiness = 3000;

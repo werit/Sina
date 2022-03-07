@@ -26,7 +26,7 @@ namespace sina.test.planning
         public async Task AddRecipeScheduleAsyncTest()
         {
             await using var context = new RecipeSchedulingContext(new DbContextOptionsBuilder<RecipeSchedulingContext>()
-                .UseNpgsql(TestSuiteSetupPlanning.DbaConnectionString).Options);
+                .UseNpgsql(TestSuiteSetupPlanning.GetConnectionString()).Options);
             await context.AddRecipeScheduleAsync(new RecipeScheduleItem()
             {
                 RecipeScheduleKey = Guid.NewGuid(),

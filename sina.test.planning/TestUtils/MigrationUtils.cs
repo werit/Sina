@@ -11,7 +11,7 @@ namespace sina.test.planning.TestUtils
         public static void MigrateDb()
         {
             using var serviceProvider = new ServiceCollection()
-                .AddDbContext<RecipeSchedulingContext>(opt => opt.UseNpgsql(TestSuiteSetupPlanning.DbaConnectionString))
+                .AddDbContext<RecipeSchedulingContext>(opt => opt.UseNpgsql(TestSuiteSetupPlanning.GetConnectionString()))
                 .AddLogging()
                 .BuildServiceProvider();
 

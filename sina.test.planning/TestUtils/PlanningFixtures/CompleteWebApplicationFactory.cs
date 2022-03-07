@@ -24,7 +24,7 @@ namespace sina.test.planning.TestUtils.PlanningFixtures
                 {
                     services.Remove(descriptor);
                 }
-                services.AddDbContext<RecipeSchedulingContext>(opt => opt.UseNpgsql(TestSuiteSetupPlanning.DbaConnectionString));
+                services.AddDbContext<RecipeSchedulingContext>(opt => opt.UseNpgsql(TestSuiteSetupPlanning.GetConnectionString()));
             });
         }
     }
