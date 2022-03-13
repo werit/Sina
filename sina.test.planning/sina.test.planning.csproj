@@ -19,21 +19,14 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
     </ItemGroup>
-
     <ItemGroup>
-      <ProjectReference Include="..\recipies_ms\recipies_ms.csproj" />
+        <Content Include="xunit.runner.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\sina.planning\sina.planning.csproj" />
       <ProjectReference Include="..\sina.test.common\sina.test.common.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Db" />
-      <Folder Include="Web" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="xunit.runner.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
     </ItemGroup>
 
 </Project>

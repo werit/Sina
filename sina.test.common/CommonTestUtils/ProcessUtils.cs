@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
-namespace recipeAPITest.TestUtils
+namespace sina.test.common.CommonTestUtils
 {
     public static class ProcessUtils
     {

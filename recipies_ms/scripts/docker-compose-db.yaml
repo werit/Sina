@@ -10,3 +10,21 @@ services:
       POSTGRES_USER: "${DBUSER}"
       POSTGRES_PASSWORD: "${DBPASS}"
       POSTGRES_DB: "${DBSCHEMA}"
+  postgre_schedule:
+    image: "postgres:12.6-alpine"
+    ports:
+      - "5435:5432"
+    restart: always
+    environment:
+      POSTGRES_USER: "${DBUSER}"
+      POSTGRES_PASSWORD: "${DBPASS}"
+      POSTGRES_DB: "${DBSCHEMA}"
+  recipe:
+    image: "recipes_ms:0.0.1"
+    ports:
+      - "8008:80"
+    restart: always
+    environment:
+      - CUSTOMCONNSTR_RecipesConnection=${RECIPE_CONNECTION}
+    depends_on:
+      - postgre
