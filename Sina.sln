@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sina.test.planning", "sina.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sina.test.common", "sina.test.common\sina.test.common.csproj", "{9F23F836-847F-4F26-9F0B-52F8E49A2ECE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sina.messaging.contracts", "sina.messaging.contracts\sina.messaging.contracts.csproj", "{3C78DB0D-1948-4954-B15A-B5A83B403B4B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{9F23F836-847F-4F26-9F0B-52F8E49A2ECE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F23F836-847F-4F26-9F0B-52F8E49A2ECE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F23F836-847F-4F26-9F0B-52F8E49A2ECE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C78DB0D-1948-4954-B15A-B5A83B403B4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C78DB0D-1948-4954-B15A-B5A83B403B4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C78DB0D-1948-4954-B15A-B5A83B403B4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C78DB0D-1948-4954-B15A-B5A83B403B4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

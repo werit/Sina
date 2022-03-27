@@ -8,6 +8,8 @@ using Microsoft.OpenApi.Models;
 using recipies_ms.Db;
 using recipies_ms.Db.Models;
 using recipies_ms.Web.ErrorHandling;
+using sina.messaging.contracts;
+using sina.messaging.contracts.MessageBroker.Kafka;
 
 namespace recipies_ms
 {
@@ -35,6 +37,7 @@ namespace recipies_ms
             });
 
             services.AddScoped<IRecipeDbContext<RecipeItem>, RecipeContext>();
+            services.AddSingleton<IMessageProducer,KafkaRecipeItemCreatedProducer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

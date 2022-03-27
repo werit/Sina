@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using recipies_ms.Db.Models;
+using sina.messaging.contracts;
+using sina.messaging.contracts.MessageBroker.Kafka;
 
 namespace recipies_ms.Db
 {
@@ -20,9 +22,14 @@ namespace recipies_ms.Db
 
     public class RecipeContext : DbContext, IRecipeDbContext<RecipeItem>
     {
-        public RecipeContext(DbContextOptions<RecipeContext> options)
+        private const string Topic = "sina";
+        private const string MessageKey = "recipe";
+        private readonly IMessageProducer producer;
+
+        public RecipeContext(DbContextOptions<RecipeContext> options, IMessageProducer producer)
             : base(options)
         {
+            this.producer = producer;
         }
 
         public DbSet<RecipeItem> Recipes { get; set; }
@@ -34,6 +41,10 @@ namespace recipies_ms.Db
             cancellationToken.ThrowIfCancellationRequested();
             Recipes.Add(recipeItem);
             await SaveChangesAsync(cancellationToken);
+            await producer.ProduceMessageAsync(Topic,
+                new KafkaMessageItemCreated
+                    {MessageKey = MessageKey, MessageValue = new RecipeItemCreated{RecipeId = recipeItem.RecipeKey,Name = recipeItem.RecipeName}}.ToJson(),
+                cancellationToken);
             return recipeItem;
         }
 

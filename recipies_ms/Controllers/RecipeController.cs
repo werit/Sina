@@ -85,6 +85,7 @@ namespace recipies_ms.Controllers
             {
                 return NotFound();
             }
+
             return Ok(recipeItemDto);
         }
 
@@ -100,6 +101,7 @@ namespace recipies_ms.Controllers
             {
                 return NotFound();
             }
+
             return NoContent();
         }
 
