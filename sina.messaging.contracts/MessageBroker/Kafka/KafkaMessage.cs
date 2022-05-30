@@ -17,4 +17,20 @@ namespace sina.messaging.contracts.MessageBroker.Kafka
             return JsonConvert.SerializeObject(this);
         }
     }
+    
+    public class KafkaMessageScheduleCreated : IMessageEntity<RecipeScheduleCreated>
+    {
+        public string MessageKey { get; set; }
+        public RecipeScheduleCreated MessageValue { get; set; }
+
+        public override string ToString()
+        {
+            return
+                $"Message key is: '{MessageKey}' and recipe name is: {MessageValue.RecipeName} and id is: {MessageValue.ScheduleId}";
+        }
+        public string ToJson()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
+    }
 }

@@ -6,8 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using recipies_ms.Web.ErrorHandling;
+using sina.messaging.contracts.MessageBroker.Extensions;
 using sina.planning.Db;
 using sina.planning.Db.Models;
+using sina.planning.MicroserviceConsumer;
 
 namespace sina.planning
 {
@@ -23,7 +25,10 @@ namespace sina.planning
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(opt =>
+            {
+                opt.SuppressAsyncSuffixInActionNames = false;
+            });
             services.AddDbContext<RecipeSchedulingContext>(opt =>
                 opt.UseNpgsql(Configuration.GetConnectionString("RecipesScheduleConnection")));
             services.AddSwaggerGen(c =>
@@ -32,6 +37,9 @@ namespace sina.planning
             });
             
             services.AddScoped<IRecipeSchedulingDbContext<RecipeScheduleItem>, RecipeSchedulingContext>();
+            services.AddSinaKafkaProducer();
+            services.AddSinaKafkaConsumers("sina");
+            services.AddSingleton<EventPusher>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,6 +60,7 @@ namespace sina.planning
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.ApplicationServices.GetService<EventPusher>();
         }
     }
 }

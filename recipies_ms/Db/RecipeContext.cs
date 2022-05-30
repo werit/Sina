@@ -18,6 +18,12 @@ namespace recipies_ms.Db
         Task<RecordUpdateStatus> DeleteRecipeByKeyAsync(Guid recipeKey, CancellationToken cancellationToken);
 
         Task<IEnumerable<T>> GetRecipesAsync(CancellationToken cancellationToken);
+
+        Task<RecipeScheduleCreated> AddScheduleAsync(RecipeScheduleCreated schedulingItem,
+            CancellationToken cancellationToken);
+
+        Task<IEnumerable<RecipeScheduleCreated>> GetSchedulesBetweenTimeAsync(DateTime from, DateTime to,
+            CancellationToken cancellationToken);
     }
 
     public class RecipeContext : DbContext, IRecipeDbContext<RecipeItem>
@@ -33,6 +39,8 @@ namespace recipies_ms.Db
         }
 
         public DbSet<RecipeItem> Recipes { get; set; }
+        
+        public DbSet<RecipeScheduleCreated> Schedules { get; set; }
 
 
         public async Task<RecipeItem> AddRecipeAsync(RecipeItem recipeItem,
@@ -108,6 +116,37 @@ namespace recipies_ms.Db
         public async Task<IEnumerable<RecipeItem>> GetRecipesAsync(CancellationToken cancellationToken)
         {
             return await Recipes.Include(rec => rec.Ingredient).ToListAsync(cancellationToken);
+        }
+
+        public async Task<RecipeScheduleCreated> AddScheduleAsync(RecipeScheduleCreated schedulingItem, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            Schedules.Add(schedulingItem);
+            await SaveChangesAsync(cancellationToken);
+            return schedulingItem;
+        }
+
+        public async Task<IEnumerable<RecipeScheduleCreated>> GetSchedulesBetweenTimeAsync(
+            DateTime froma,
+            DateTime to,
+            CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var query = from schedule in Schedules.Where(x=>x.ScheduleDatetime >= froma && x.ScheduleDatetime <= to)
+                join recipe in  Recipes
+                    on schedule.RecipeId equals recipe.RecipeKey
+                    group 
+            select new {}
+
+            var a = await Schedules.Where(x => x.ScheduleDatetime >= froma && x.ScheduleDatetime <= to)
+                .Join(Recipes, schedule => schedule.RecipeId, recipe => recipe.RecipeKey, (sch, rc) 
+                    => new
+                {
+ingredient = rc.Ingredient,
+multiplier = sch.PlannedPortions
+                }).GroupBy(ing =>ing.ingredient)
+            .ToListAsync(cancellationToken);
+
         }
 
         private bool RecipeItemExists(Guid id)

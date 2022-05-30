@@ -22,15 +22,5 @@ namespace sina.planning.Db.Models
         
         [Column("recipe_portions")]
         public float RecipePortions { get; set; }
-
-        [Column("valid_from")]
-        public DateTime ValidFrom { get; set; }
-        
-        [Column("valid_to")]
-        public DateTime ValidTo { get; set; }
-        
-        [Column("current_flag")]
-        public char CurrentFlag { get; set; }
-        
     }
 }

@@ -3,13 +3,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using recipies_ms.Db;
 using recipies_ms.Db.Models;
+using recipies_ms.MicroserviceConsumer;
 using recipies_ms.Web.ErrorHandling;
-using sina.messaging.contracts;
-using sina.messaging.contracts.MessageBroker.Kafka;
+using sina.messaging.contracts.MessageBroker.Extensions;
 
 namespace recipies_ms
 {
@@ -37,7 +36,9 @@ namespace recipies_ms
             });
 
             services.AddScoped<IRecipeDbContext<RecipeItem>, RecipeContext>();
-            services.AddSingleton<IMessageProducer,KafkaRecipeItemCreatedProducer>();
+            services.AddSinaKafkaProducer();
+            services.AddSinaKafkaConsumers("sina-schedule");
+            services.AddSingleton<RecipeDbEventPusher>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,7 +51,7 @@ namespace recipies_ms
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "recipies_ms v1"));
-            // }
+            // }    
 
             app.UseHttpsRedirection();
 

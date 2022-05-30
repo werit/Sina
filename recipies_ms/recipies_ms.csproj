@@ -19,10 +19,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="MessageBroker\Kafka" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\sina.messaging.contracts\sina.messaging.contracts.csproj" />
     </ItemGroup>
 
