@@ -36,7 +36,7 @@ namespace sina.messaging.contracts
         public string RecipeName { get; set; }        
         
         [Required]
-        [Column("planned_times")]
+        [Column("planned_recipe_multiplier")]
         public float PlannedPortions { get; set; }
     }
 }

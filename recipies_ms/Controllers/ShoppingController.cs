@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,22 +29,25 @@ namespace recipies_ms.Controllers
 
 
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(RecipeScheduleCreated), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(RecipeScheduleCreated), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(GroupedIngredients), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GroupedIngredients), StatusCodes.Status404NotFound)]
         [HttpGet("{from:datetime},{to:datetime}")]
-        public async Task<ActionResult<IEnumerable<RecipeScheduleCreated>>> GetSchedulesInTimeFrameAsync(DateTime from,
+        public async Task<ActionResult<IEnumerable<GroupedIngredients>>> GetSchedulesInTimeFrameAsync(DateTime from,
             DateTime to,
             CancellationToken cancellationToken)
         {
+            var message = $"Request for {nameof(GetSchedulesInTimeFrameAsync)} with parameters {nameof(from)}: {from} and {nameof(to)}: {to}.";
+            Debug.WriteLine(message);
+
             logger.Log(LogLevel.Debug,
-                $"Request for {nameof(GetSchedulesInTimeFrameAsync)} with parameters {nameof(from)}: {from} and {nameof(to)}: {to}.");
-            var scheduleCreateds = (await dbContext.GetSchedulesBetweenTimeAsync(from, to, cancellationToken));
-            if (scheduleCreateds == null)
+                message);
+            var schedulesCreated = (await dbContext.GetSchedulesBetweenTimeAsync(from, to, cancellationToken));
+            if (schedulesCreated == null)
             {
                 return NotFound();
             }
 
-            return Ok(scheduleCreateds);
+            return Ok(schedulesCreated);
         }
     }
 }

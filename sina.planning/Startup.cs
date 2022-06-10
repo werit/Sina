@@ -38,7 +38,7 @@ namespace sina.planning
             
             services.AddScoped<IRecipeSchedulingDbContext<RecipeScheduleItem>, RecipeSchedulingContext>();
             services.AddSinaKafkaProducer();
-            services.AddSinaKafkaConsumers("sina");
+            services.AddSinaKafkaConsumers("sina-planners","sina");
             services.AddSingleton<EventPusher>();
         }
 

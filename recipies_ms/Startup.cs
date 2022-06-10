@@ -37,7 +37,7 @@ namespace recipies_ms
 
             services.AddScoped<IRecipeDbContext<RecipeItem>, RecipeContext>();
             services.AddSinaKafkaProducer();
-            services.AddSinaKafkaConsumers("sina-schedule");
+            services.AddSinaKafkaConsumers( "Sina-Consumers","sina-schedule");
             services.AddSingleton<RecipeDbEventPusher>();
         }
 
@@ -60,6 +60,7 @@ namespace recipies_ms
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.ApplicationServices.GetService<RecipeDbEventPusher>();
         }
     }
 }

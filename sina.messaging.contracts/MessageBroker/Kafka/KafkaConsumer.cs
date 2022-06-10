@@ -21,13 +21,14 @@ namespace sina.messaging.contracts.MessageBroker.Kafka
         private List<IConsumerEvent> eventsListeners = new();
         private readonly string topic;
 
-        public KafkaRecipeItemCreatedCreatedConsumer(string topic)
+        public KafkaRecipeItemCreatedCreatedConsumer(string groupId,string topic)
         {
             var config = new ConsumerConfig()
             {
                 BootstrapServers = "localhost:29092",
-                GroupId = "Sina-Consumers",
-                AutoOffsetReset = AutoOffsetReset.Earliest
+                GroupId = groupId,
+                AutoOffsetReset = AutoOffsetReset.Earliest,
+                AllowAutoCreateTopics = true
             };
             consumerBuilder = new ConsumerBuilder<Null, string>(config).Build();
             this.topic = topic;

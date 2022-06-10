@@ -10,6 +10,13 @@ using sina.messaging.contracts.MessageBroker.Kafka;
 
 namespace recipies_ms.Db
 {
+    public class GroupedIngredients
+    {
+        public Guid recipeKey { get; set; }
+        public ICollection<RecipeIngredientItem> ingredients { get; set; }
+        public float portions { get; set; }
+    }
+
     public interface IRecipeDbContext<T> where T : IRecipeEntity
     {
         Task<T> AddRecipeAsync(T recipeItem, CancellationToken cancellationToken);
@@ -22,7 +29,7 @@ namespace recipies_ms.Db
         Task<RecipeScheduleCreated> AddScheduleAsync(RecipeScheduleCreated schedulingItem,
             CancellationToken cancellationToken);
 
-        Task<IEnumerable<RecipeScheduleCreated>> GetSchedulesBetweenTimeAsync(DateTime from, DateTime to,
+        Task<IEnumerable<GroupedIngredients>> GetSchedulesBetweenTimeAsync(DateTime from, DateTime to,
             CancellationToken cancellationToken);
     }
 
@@ -126,25 +133,32 @@ namespace recipies_ms.Db
             return schedulingItem;
         }
 
-        public async Task<IEnumerable<RecipeScheduleCreated>> GetSchedulesBetweenTimeAsync(
+        public async Task<IEnumerable<GroupedIngredients>> GetSchedulesBetweenTimeAsync(
             DateTime froma,
             DateTime to,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var query = from schedule in Schedules.Where(x=>x.ScheduleDatetime >= froma && x.ScheduleDatetime <= to)
-                join recipe in  Recipes
-                    on schedule.RecipeId equals recipe.RecipeKey
-                    group 
-            select new {}
-
-            var a = await Schedules.Where(x => x.ScheduleDatetime >= froma && x.ScheduleDatetime <= to)
-                .Join(Recipes, schedule => schedule.RecipeId, recipe => recipe.RecipeKey, (sch, rc) 
-                    => new
+            // var query = from schedule in Schedules.Where(x=>x.ScheduleDatetime >= froma && x.ScheduleDatetime <= to)
+            //     join recipe in  Recipes.Include(x=>x.Ingredient)
+            //         on schedule.RecipeId equals recipe.RecipeKey
+            //         group 
+            // select new {}
+            // List<{Guid,ICollection<RecipeIngredientItem>, float}> b;
+            return await Schedules.Where(x => x.ScheduleDatetime >= froma && x.ScheduleDatetime <= to)
+                .Join(Recipes.Include(ing =>ing.Ingredient), schedule => schedule.RecipeId, recipe => recipe.RecipeKey, (sch, rc) 
+                    => new GroupedIngredients
+                    {
+                        recipeKey = rc.RecipeKey,
+                        ingredients = rc.Ingredient,
+                        portions = sch.PlannedPortions
+                    }
+                )
+                .GroupBy(ing =>new
                 {
-ingredient = rc.Ingredient,
-multiplier = sch.PlannedPortions
-                }).GroupBy(ing =>ing.ingredient)
+                    ing.ingredients.Select(x=>x.IngredientKey),
+                    ing.ingredients
+                })
             .ToListAsync(cancellationToken);
 
         }

@@ -12,9 +12,9 @@ namespace sina.messaging.contracts.MessageBroker.Extensions
             return services;
         }
 
-        public static IServiceCollection AddSinaKafkaConsumers(this IServiceCollection services, string topic)
+        public static IServiceCollection AddSinaKafkaConsumers(this IServiceCollection services, string  groupId,string topic)
         {
-            var  kafkaRecipeItemCreatedCreatedConsumer= new KafkaRecipeItemCreatedCreatedConsumer(topic);
+            var  kafkaRecipeItemCreatedCreatedConsumer= new KafkaRecipeItemCreatedCreatedConsumer(groupId,topic);
             services.AddSingleton<IHostedService>(kafkaRecipeItemCreatedCreatedConsumer);
             services.AddSingleton<IMessageCreatedConsumer>(kafkaRecipeItemCreatedCreatedConsumer);
             services.AddSingleton<IKafkaConsumerRepository, KafkaConsumerRepository>();
