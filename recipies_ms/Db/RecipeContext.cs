@@ -12,9 +12,10 @@ namespace recipies_ms.Db
 {
     public class GroupedIngredients
     {
-        public Guid recipeKey { get; set; }
-        public ICollection<RecipeIngredientItem> ingredients { get; set; }
-        public float portions { get; set; }
+        public Guid IngredientKey { get; set; }
+        public string IngredientName { get; set; }
+        public string IngredientUnit { get; set; }
+        public float IngredientAmount { get; set; }
     }
 
     public interface IRecipeDbContext<T> where T : IRecipeEntity
@@ -33,7 +34,17 @@ namespace recipies_ms.Db
             CancellationToken cancellationToken);
     }
 
-    public class RecipeContext : DbContext, IRecipeDbContext<RecipeItem>
+    public interface IRecipeIngredient
+    {
+        Task<Ingredient> AddIngredientAsync(Ingredient recipeItem, CancellationToken cancellationToken);
+        Task<RecordUpdateStatus> UpdateIngredientAsync(Ingredient recipeItem, CancellationToken cancellationToken);
+        Task<Ingredient> GetIngredientByKeyAsync(Guid recipeKey, CancellationToken cancellationToken);
+        Task<RecordUpdateStatus> DeleteIngredientByKeyAsync(Guid recipeKey, CancellationToken cancellationToken);
+
+        Task<IEnumerable<Ingredient>> GetIngredientsAsync(CancellationToken cancellationToken);
+    }
+
+    public class RecipeContext : DbContext, IRecipeDbContext<RecipeItem>, IRecipeIngredient
     {
         private const string Topic = "sina";
         private const string MessageKey = "recipe";
@@ -48,6 +59,17 @@ namespace recipies_ms.Db
         public DbSet<RecipeItem> Recipes { get; set; }
         
         public DbSet<RecipeScheduleCreated> Schedules { get; set; }
+        
+        public DbSet<Ingredient> Ingredients { get; set; }
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //Write Fluent API configurations here
+
+            //Property Configurations
+            modelBuilder.Entity<RecipeIngredientItem>()
+                .HasKey(ri => new {ri.IngredientKey, ri.RecipeItemId});
+        }
 
 
         public async Task<RecipeItem> AddRecipeAsync(RecipeItem recipeItem,
@@ -146,18 +168,33 @@ namespace recipies_ms.Db
             // select new {}
             // List<{Guid,ICollection<RecipeIngredientItem>, float}> b;
             return await Schedules.Where(x => x.ScheduleDatetime >= froma && x.ScheduleDatetime <= to)
-                .Join(Recipes.Include(ing =>ing.Ingredient), schedule => schedule.RecipeId, recipe => recipe.RecipeKey, (sch, rc) 
-                    => new GroupedIngredients
-                    {
-                        recipeKey = rc.RecipeKey,
-                        ingredients = rc.Ingredient,
-                        portions = sch.PlannedPortions
-                    }
+                .Join(
+                    Recipes.Include(ing => ing.Ingredient)
+                        .SelectMany(rec => rec.Ingredient, (x, y) =>
+                            new {x.RecipeKey, y.IngredientKey, y.Ingredient, y.Amount, y.Unit}),
+                    schedule => schedule.RecipeId, recipe => recipe.RecipeKey,
+                    (sch, rc)
+                        => new
+                        {
+                            recipeKey = rc.RecipeKey,
+                            ingredientKey = rc.IngredientKey,
+                            ingredientName = rc.Ingredient,
+                            amount = rc.Amount,
+                            unit = rc.Unit,
+                            portions = sch.PlannedPortions
+                        }
                 )
-                .GroupBy(ing =>new
+                .GroupBy(ing => new {ing.ingredientKey, ing.ingredientName, ing.unit
+        },
+
+        ing => new {ing.amount,ing.portions},
+                    (groupBase,groupedResult)=>
+                    new GroupedIngredients
                 {
-                    ing.ingredients.Select(x=>x.IngredientKey),
-                    ing.ingredients
+                    IngredientKey = groupBase.ingredientKey,
+                    IngredientName = groupBase.ingredientName,
+                    IngredientUnit = groupBase.unit,
+                    IngredientAmount = groupedResult.Sum( res=>res.amount *res.portions)
                 })
             .ToListAsync(cancellationToken);
 
@@ -166,6 +203,35 @@ namespace recipies_ms.Db
         private bool RecipeItemExists(Guid id)
         {
             return Recipes.Any(e => e.RecipeKey == id);
+        }
+
+
+        public async Task<Ingredient> AddIngredientAsync(Ingredient recipeItem, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            await Ingredients.AddAsync(recipeItem, cancellationToken);
+            await SaveChangesAsync(cancellationToken);
+            return recipeItem;
+        }
+
+        public Task<RecordUpdateStatus> UpdateIngredientAsync(Ingredient recipeItem, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Ingredient> GetIngredientByKeyAsync(Guid recipeKey, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<RecordUpdateStatus> DeleteIngredientByKeyAsync(Guid recipeKey, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Ingredient>> GetIngredientsAsync(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using recipies_ms.Db;
@@ -9,9 +10,10 @@ using recipies_ms.Db;
 namespace recipies_ms.Migrations
 {
     [DbContext(typeof(RecipeContext))]
-    partial class RecipeContextModelSnapshot : ModelSnapshot
+    [Migration("20220612151028_AddSeparateIngredients")]
+    partial class AddSeparateIngredients
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,12 +45,9 @@ namespace recipies_ms.Migrations
             modelBuilder.Entity("recipies_ms.Db.Models.RecipeIngredientItem", b =>
                 {
                     b.Property<Guid>("IngredientKey")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("ingredient_key");
-
-                    b.Property<Guid>("RecipeItemId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("recipe_key");
 
                     b.Property<float>("Amount")
                         .HasColumnType("real")
@@ -63,12 +62,16 @@ namespace recipies_ms.Migrations
                         .HasColumnType("text")
                         .HasColumnName("ingredient_note");
 
+                    b.Property<Guid>("RecipeItemId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("recipe_key");
+
                     b.Property<string>("Unit")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("unit");
 
-                    b.HasKey("IngredientKey", "RecipeItemId");
+                    b.HasKey("IngredientKey");
 
                     b.HasIndex("RecipeItemId");
 

@@ -5,7 +5,7 @@ using recipies_ms.Db.Models;
 
 namespace recipies_ms.Web.Dto
 {
-    public record RecipeIngredientItemCreateDto(float Amount, string Unit, string Ingredient, string Note);
+    public record RecipeIngredientItemCreateDto(Guid ingredientId,float Amount, string Unit, string Note);
 
     public record RecipeIngredientItemDto(Guid RecipeIngredientKey, float Amount, string Unit, string Ingredient,
         string Note);
@@ -50,7 +50,7 @@ namespace recipies_ms.Web.Dto
                 Ingredient = recipeItemCreateDto.Ingredients?.Select(x => new RecipeIngredientItem
                 {
                     Amount = x.Amount, Ingredient = x.Ingredient, Note = x.Note, Unit = x.Unit,
-                    IngredientKey = Guid.NewGuid(), RecipeItemId = recipeKey
+                    IngredientKey = x.ingredientId, RecipeItemId = recipeKey
                 }).ToList()
             };
         }

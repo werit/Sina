@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace recipies_ms.Db.Models
 {
-    [Table("recipe_ingredient")]
+    [Table("recipe_ingredient_rel")]
     public class RecipeIngredientItem
     {
         [Key]
