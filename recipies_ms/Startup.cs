@@ -36,6 +36,7 @@ namespace recipies_ms
             });
 
             services.AddScoped<IRecipeDbContext<RecipeItem>, RecipeContext>();
+            services.AddScoped<IRecipeIngredient, RecipeContext>();
             services.AddSinaKafkaProducer();
             services.AddSinaKafkaConsumers( "Sina-Consumers","sina-schedule");
             services.AddSingleton<RecipeDbEventPusher>();

@@ -9,7 +9,8 @@ namespace recipies_ms.Db.Models
     {
         [Key]
         [Column("ingredient_key")]
-        public Guid IngredientKey { get; set; }
+
+        public Guid IngredientId { get; set; }
 
         [Column("recipe_key")]
         public Guid RecipeItemId { get; set; }
@@ -21,12 +22,8 @@ namespace recipies_ms.Db.Models
         [Column("unit")]
         public string Unit { get; set; }
 
-        [Required(AllowEmptyStrings = false)]
-        [Column("ingredient")]
-        public string Ingredient { get; set; }
-
-        [Column("ingredient_note")]
-        public string Note { get; set; }
+        [Column("ingredient_recipe_note")]
+        public string IngredientRecipeNote { get; set; }
 
 
     }

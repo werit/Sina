@@ -40,9 +40,9 @@ namespace recipeAPITest.Controllers
                     RecipeName = "Pie", RecipeDescription = "Monty", Ingredients =
                         new List<RecipeIngredientItemCreateDto>
                         {
-                            new(5, "pcs", "flour", "Mix it"),
-                            new(600, "ml", "milk", "Mix it"),
-                            new(700, "lb", "sugar", "You can add more or lees. It si up to you.")
+                            new(Guid.NewGuid(), 3.3f, "cup", "Mix it"),
+                            new(Guid.NewGuid(), 100f, "ml", "Mix it"),
+                            new(Guid.NewGuid(), 2, "lb", "You can add more or less. It is up to you.")
                         }
                 }
             };
@@ -53,8 +53,8 @@ namespace recipeAPITest.Controllers
                     RecipeName = "Home wine", RecipeDescription = "Bre it", Ingredients =
                         new List<RecipeIngredientItemCreateDto>
                         {
-                            new(5, "cup", "water", null),
-                            new(5, "cup", "water", "")
+                            new(Guid.NewGuid(), 2, "cup", null),
+                            new(Guid.NewGuid(), 1.5f, "cup", "")
                         }
                 }
             };
@@ -110,17 +110,17 @@ namespace recipeAPITest.Controllers
             {
                 "Pie", "Monty", new RecipeIngredientItemDto[]
                 {
-                    new(Guid.Empty, 600f, "ml", "milk", ""),
-                    new(Guid.Empty, 700.2f, "lb", "sugar", "You can add more or lees. It si up to you.")
+                    new(Guid.Empty, 600f, "ml", "milk"),
+                    new(Guid.Empty, 700.2f, "lb", "You can add more or lees. It si up to you.")
                 }
             };
             yield return new object[]
             {
                 "Home wine", "Bre it", new RecipeIngredientItemDto[]
                 {
-                    new(Guid.Empty, 1.5f, "pcs", "grapes", "no"),
-                    new(Guid.Empty, 5f, "cup", "water", null),
-                    new(Guid.Empty, 5.2f, "cup", "water", "")
+                    new(Guid.Empty, 1.5f, "pcs", "no"),
+                    new(Guid.Empty, 5f, "cup", null),
+                    new(Guid.Empty, 5.2f, "cup", "")
                 }
             };
         }
@@ -169,8 +169,8 @@ namespace recipeAPITest.Controllers
                 RecipeName = recipeName, RecipeDescription = recipeDescription, RecipeKey = recipeKey, Ingredient =
                     sourceIngredients.Select(ing => new RecipeIngredientItem
                     {
-                        IngredientKey = Guid.NewGuid(), RecipeItemId = recipeKey, Amount = ing.Amount, Unit = ing.Unit,
-                        Ingredient = ing.Ingredient, Note = ing.Note
+                        IngredientId = Guid.NewGuid(), RecipeItemId = recipeKey, Amount = ing.Amount, Unit = ing.Unit,
+                        IngredientRecipeNote = ing.Note
                     }).ToList()
             };
             return recipeItem;

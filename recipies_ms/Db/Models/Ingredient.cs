@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,6 +18,9 @@ namespace recipies_ms.Db.Models
 
         [Column("ingredient_note")]
         public string Note { get; set; }
+
+        [Column("recipe_ingredient")]
+        public ICollection<RecipeIngredientItem> recipeIngredientItem { get; set; }
 
     }
 }

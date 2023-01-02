@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: "${DBPASS}"
       POSTGRES_DB: "${DBSCHEMA}"
     volumes:
-      - postgre_recipe_vol:/var/lib/postgresql/data
+      - c:\\Users\\werit\\sources\\repos\\Sina\\storage\\recipe\\postgre:/var/lib/postgresql/data
   postgre_schedule:
     image: "postgres:12.6-alpine"
     ports:
@@ -22,7 +22,7 @@ services:
       POSTGRES_PASSWORD: "${DBPASS}"
       POSTGRES_DB: "${DBSCHEMA}"
     volumes:
-      - postgre_schedule_vol:/var/lib/postgresql/data
+      - c:\\Users\\werit\\sources\\repos\\Sina\\storage\\planning\\postgre:/var/lib/postgresql/data
   zookeeper:
     image: "confluentinc/cp-zookeeper:7.0.1"
     environment:
@@ -58,8 +58,7 @@ services:
     depends_on:
       - zookeeper
       - kafka
-
-volumes:
-  postgre_schedule_vol:
-  postgre_recipe_vol:
+#
+#volumes:
+#  postgre_schedule_vol:
   

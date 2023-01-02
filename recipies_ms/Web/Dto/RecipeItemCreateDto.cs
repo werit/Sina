@@ -5,10 +5,10 @@ using recipies_ms.Db.Models;
 
 namespace recipies_ms.Web.Dto
 {
-    public record RecipeIngredientItemCreateDto(Guid ingredientId,float Amount, string Unit, string Note);
-
-    public record RecipeIngredientItemDto(Guid RecipeIngredientKey, float Amount, string Unit, string Ingredient,
+    public record RecipeIngredientItemCreateDto(Guid ingredientId, float Amount, string Unit,
         string Note);
+
+    public record RecipeIngredientItemDto(Guid RecipeIngredientKey, float Amount, string Unit, string Note);
 
     public class RecipeItemDto
     {
@@ -34,11 +34,11 @@ namespace recipies_ms.Web.Dto
                 throw new ArgumentNullException($"{nameof(recipeItemCreateDto.RecipeName)} cannot be null or empty.");
             }
 
-            if (recipeItemCreateDto.Ingredients!= null && recipeItemCreateDto.Ingredients.Any(x =>
-                string.IsNullOrEmpty(x.Ingredient) || string.IsNullOrEmpty(x.Unit)))
+            if (recipeItemCreateDto.Ingredients != null && recipeItemCreateDto.Ingredients.Any(x =>
+                    string.IsNullOrEmpty(x.Unit)))
             {
                 throw new ArgumentException(
-                    $"{nameof(RecipeIngredientItemCreateDto.Ingredient)} and {nameof(RecipeIngredientItemCreateDto.Unit)} must be filled with non empty value.");
+                    $"{nameof(RecipeIngredientItemCreateDto.Unit)} must be filled with non empty value.");
             }
 
             var recipeKey = Guid.NewGuid();
@@ -49,8 +49,11 @@ namespace recipies_ms.Web.Dto
                 RecipeDescription = recipeItemCreateDto.RecipeDescription,
                 Ingredient = recipeItemCreateDto.Ingredients?.Select(x => new RecipeIngredientItem
                 {
-                    Amount = x.Amount, Ingredient = x.Ingredient, Note = x.Note, Unit = x.Unit,
-                    IngredientKey = x.ingredientId, RecipeItemId = recipeKey
+                    Amount = x.Amount,
+                    IngredientId = x.ingredientId,
+                    Unit = x.Unit,
+                    IngredientRecipeNote = x.Note,
+                    RecipeItemId = recipeKey
                 }).ToList()
             };
         }
@@ -68,9 +71,11 @@ namespace recipies_ms.Web.Dto
                 RecipeName = recipeItem.RecipeName,
                 RecipeDescription = recipeItem.RecipeDescription,
                 Ingredients = recipeItem.Ingredient?.Select(x =>
-                    new RecipeIngredientItemDto(x.IngredientKey, x.Amount, x.Unit, x.Ingredient, x.Note)).ToList()
+                    new RecipeIngredientItemDto(x.IngredientId, x.Amount, x.Unit,
+                        x.IngredientRecipeNote)).ToList()
             };
         }
+
         public static RecipeItemDto ToRecipeItemDto(this IRecipeEntity recipeItem)
         {
             throw new NotImplementedException();
@@ -89,10 +94,11 @@ namespace recipies_ms.Web.Dto
                 RecipeName = recipeItem.RecipeName,
                 RecipeDescription = recipeItem.RecipeDescription,
                 Ingredient = recipeItem.Ingredients.Select(x =>
-                    new RecipeIngredientItem()
+                    new RecipeIngredientItem
                     {
                         RecipeItemId = recipeItem.RecipeKey, Amount = x.Amount, Unit = x.Unit,
-                        IngredientKey = x.RecipeIngredientKey, Ingredient = x.Ingredient, Note = x.Note
+                        IngredientId = x.RecipeIngredientKey,
+                        IngredientRecipeNote = x.Note
                     }).ToList()
             };
         }

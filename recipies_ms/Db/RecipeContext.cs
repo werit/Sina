@@ -36,10 +36,10 @@ namespace recipies_ms.Db
 
     public interface IRecipeIngredient
     {
-        Task<Ingredient> AddIngredientAsync(Ingredient recipeItem, CancellationToken cancellationToken);
-        Task<RecordUpdateStatus> UpdateIngredientAsync(Ingredient recipeItem, CancellationToken cancellationToken);
-        Task<Ingredient> GetIngredientByKeyAsync(Guid recipeKey, CancellationToken cancellationToken);
-        Task<RecordUpdateStatus> DeleteIngredientByKeyAsync(Guid recipeKey, CancellationToken cancellationToken);
+        Task<Ingredient> AddIngredientAsync(Ingredient ingredientItem, CancellationToken cancellationToken);
+        Task<RecordUpdateStatus> UpdateIngredientAsync(Ingredient ingredientItem, CancellationToken cancellationToken);
+        Task<Ingredient> GetIngredientByKeyAsync(Guid ingredientKey, CancellationToken cancellationToken);
+        Task<RecordUpdateStatus> DeleteIngredientByKeyAsync(Guid ingredientKey, CancellationToken cancellationToken);
 
         Task<IEnumerable<Ingredient>> GetIngredientsAsync(CancellationToken cancellationToken);
     }
@@ -68,7 +68,7 @@ namespace recipies_ms.Db
 
             //Property Configurations
             modelBuilder.Entity<RecipeIngredientItem>()
-                .HasKey(ri => new {ri.IngredientKey, ri.RecipeItemId});
+                .HasKey(ri => new {ri.RecipeItemId,ri.IngredientId});
         }
 
 
@@ -167,24 +167,37 @@ namespace recipies_ms.Db
             //         group 
             // select new {}
             // List<{Guid,ICollection<RecipeIngredientItem>, float}> b;
+
             return await Schedules.Where(x => x.ScheduleDatetime >= froma && x.ScheduleDatetime <= to)
                 .Join(
                     Recipes.Include(ing => ing.Ingredient)
                         .SelectMany(rec => rec.Ingredient, (x, y) =>
-                            new {x.RecipeKey, y.IngredientKey, y.Ingredient, y.Amount, y.Unit}),
+                            new {x.RecipeKey, y.IngredientId, y.Amount, y.Unit}),
                     schedule => schedule.RecipeId, recipe => recipe.RecipeKey,
                     (sch, rc)
                         => new
                         {
                             recipeKey = rc.RecipeKey,
-                            ingredientKey = rc.IngredientKey,
-                            ingredientName = rc.Ingredient,
+                            ingredientKey = rc.IngredientId,
                             amount = rc.Amount,
                             unit = rc.Unit,
                             portions = sch.PlannedPortions
                         }
-                )
-                .GroupBy(ing => new {ing.ingredientKey, ing.ingredientName, ing.unit
+                ).Join(
+                    Ingredients,
+                    combinedTable=>combinedTable.ingredientKey,
+                    ingRelComb=>ingRelComb.IngredientKey,
+                    (recRelComb,ingredient)
+                    => new
+                    {
+                        recRelComb.recipeKey,
+                        recRelComb.ingredientKey,
+                        ingredientName = ingredient.IngredientName,
+                        recRelComb.amount,
+                        recRelComb.unit,
+                        recRelComb.portions
+                    })
+                .GroupBy(ing => new {ing.ingredientKey,ing.ingredientName, ing.unit
         },
 
         ing => new {ing.amount,ing.portions},
@@ -206,25 +219,28 @@ namespace recipies_ms.Db
         }
 
 
-        public async Task<Ingredient> AddIngredientAsync(Ingredient recipeItem, CancellationToken cancellationToken)
+        public async Task<Ingredient> AddIngredientAsync(Ingredient ingredientItem, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            await Ingredients.AddAsync(recipeItem, cancellationToken);
+            await Ingredients.AddAsync(ingredientItem, cancellationToken);
             await SaveChangesAsync(cancellationToken);
-            return recipeItem;
+            return ingredientItem;
         }
 
-        public Task<RecordUpdateStatus> UpdateIngredientAsync(Ingredient recipeItem, CancellationToken cancellationToken)
+        public Task<RecordUpdateStatus> UpdateIngredientAsync(Ingredient ingredientItem, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Ingredient> GetIngredientByKeyAsync(Guid recipeKey, CancellationToken cancellationToken)
+        public async Task<Ingredient> GetIngredientByKeyAsync(Guid ingredientKey, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            return await Ingredients
+                .SingleOrDefaultAsync(ing => ing.IngredientKey == ingredientKey, cancellationToken);
+
         }
 
-        public Task<RecordUpdateStatus> DeleteIngredientByKeyAsync(Guid recipeKey, CancellationToken cancellationToken)
+        public Task<RecordUpdateStatus> DeleteIngredientByKeyAsync(Guid ingredientKey, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
