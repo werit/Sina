@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using recipies_ms.Web.Dto;
 using sina.planning.Db;
 using sina.planning.Db.Models;
 using sina.planning.Web.Dto;
 using System.Linq;
+using sina.endpoint.common.Web.Dto;
 
 namespace sina.planning.Controllers
 {

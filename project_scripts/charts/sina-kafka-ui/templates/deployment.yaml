@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sina-kafka-ui.fullname" . }}
+  labels:
+    {{- include "sina-kafka-ui.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "sina-kafka-ui.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "sina-kafka-ui.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          # TODO: Priority 1
+          # TODO: Fix env variables to connect to the official kafka cluster
+          env:
+            - name: KAFKA_CLUSTERS_0_NAME
+              value: skui-kafka-0
+            - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+              value: skui-kafka-0:9092
+            - name: KAFKA_CLUSTERS_0_ZOOKEEPER
+              value: skui-zookeeper-0:2181
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

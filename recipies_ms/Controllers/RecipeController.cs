@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using recipies_ms.Db;
 using recipies_ms.Db.Models;
 using recipies_ms.Web.Dto;
+using sina.endpoint.common.Web.Dto;
 
 namespace recipies_ms.Controllers
 {

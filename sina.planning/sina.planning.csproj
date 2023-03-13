@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\recipies_ms\recipies_ms.csproj" />
+        <ProjectReference Include="..\sina.endpoint.common\sina.endpoint.common.csproj" />
         <ProjectReference Include="..\sina.messaging.contracts\sina.messaging.contracts.csproj" />
     </ItemGroup>
 

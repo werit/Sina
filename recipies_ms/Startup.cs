@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Models;
 using recipies_ms.Db;
 using recipies_ms.Db.Models;
 using recipies_ms.MicroserviceConsumer;
-using recipies_ms.Web.ErrorHandling;
+using sina.endpoint.common.Web.ErrorHandling;
 using sina.messaging.contracts.MessageBroker.Extensions;
 
 namespace recipies_ms

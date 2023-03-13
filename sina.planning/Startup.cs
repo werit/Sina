@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using recipies_ms.Web.ErrorHandling;
+using sina.endpoint.common.Web.ErrorHandling;
 using sina.messaging.contracts.MessageBroker.Extensions;
 using sina.planning.Db;
 using sina.planning.Db.Models;

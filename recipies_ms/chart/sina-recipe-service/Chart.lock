@@ -1,0 +1,6 @@
+dependencies:
+- name: sina-postgre
+  repository: file://../../../project_scripts/charts/sina-postgre
+  version: 0.1.0
+digest: sha256:5e2a914058450c0cce5f8ead9075a999c18b8ec1d03a6274761da835e21ece13
+generated: "2023-01-02T00:09:44.1156017+01:00"
