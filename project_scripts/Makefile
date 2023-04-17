@@ -6,7 +6,7 @@ stop-all:
 	cd ../recipies_ms/scripts/ ; docker-compose --env-file ./.env -f ./docker-compose-db.yaml -p sina down
 	
 helm-recipe-up:
-	cd ../recipies_ms/chart ; helm install sina-recipe-app -n sina sina-recipe-service\ --create-namespace
+	cd ../recipies_ms/chart ; helm install sina-recipe-app -n sina --create-namespace sina-recipe-service\ 
 
 helm-recipe-upg:
 	cd ../recipies_ms/chart ; helm upgrade sina-recipe-app -n sina sina-recipe-service\
