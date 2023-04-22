@@ -36,14 +36,12 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          # TODO: Priority 1
-          # TODO: Fix env variables to connect to the official kafka cluster
           env:
             - name: KAFKA_CLUSTERS_0_NAME
-              value: skui-kafka-0
+              value: {{ .Release.Name }}-0
             - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
-              value: skui-kafka-0:9092
+              value: {{ .Release.Name }}-headless.{{ .Release.Namespace }}.svc.cluster.local:9092
             - name: KAFKA_CLUSTERS_0_ZOOKEEPER
-              value: skui-zookeeper-0:2181
+              value: {{ .Release.Name }}-zookeeper-0:2181
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
