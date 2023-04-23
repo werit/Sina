@@ -2,5 +2,8 @@ dependencies:
 - name: kafka
   repository: https://charts.bitnami.com/bitnami
   version: 20.0.2
-digest: sha256:abbef5466da1c308edcf54c95eb749117526c66c16c3764ab4833fc9f965f954
-generated: "2023-01-02T23:53:02.8297369+01:00"
+- name: sina-recipe-service
+  repository: file://../../../recipies_ms/chart/sina-recipe-service
+  version: 0.1.0
+digest: sha256:6b25f8278b506898231cccfd68ebacf7020ee024c30d51fdddadc30182513256
+generated: "2023-04-24T01:33:10.9639868+02:00"

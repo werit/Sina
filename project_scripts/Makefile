@@ -16,7 +16,10 @@ helm-recipe-down:
 	
 
 helm-kafka-up:
-	cd ../project_scripts/charts ;helm install sina-kafka-ch -n sina .\sina-kafka-ui\	
+	cd ../project_scripts/charts ;helm install sina-kafka-ch -n sina --create-namespace sina-kafka-ui\	
 
 helm-kafka-upg:
-	cd ../project_scripts/charts ;helm upgrade sina-kafka-ch -n sina .\sina-kafka-ui\
+	cd ../project_scripts/charts ;helm upgrade sina-kafka-ch -n sina sina-kafka-ui\
+
+helm-kafka-down:
+	cd ../project_scripts/charts ;helm uninstall sina-kafka-ch -n sina

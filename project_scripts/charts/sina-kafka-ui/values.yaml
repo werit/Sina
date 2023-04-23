@@ -78,4 +78,9 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
+deps:
+  recipes:
+    enabled: true
+    
+
 
