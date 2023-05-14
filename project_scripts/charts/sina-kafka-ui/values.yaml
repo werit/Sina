@@ -80,6 +80,8 @@ autoscaling:
 
 deps:
   recipes:
+    enabled: false
+  recipesPostgres:
     enabled: true
     
 

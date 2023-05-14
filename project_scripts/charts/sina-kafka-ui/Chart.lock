@@ -5,5 +5,8 @@ dependencies:
 - name: sina-recipe-service
   repository: file://../../../recipies_ms/chart/sina-recipe-service
   version: 0.1.0
-digest: sha256:6b25f8278b506898231cccfd68ebacf7020ee024c30d51fdddadc30182513256
-generated: "2023-04-24T01:33:10.9639868+02:00"
+- name: sina-postgre
+  repository: file://../../../project_scripts/charts/sina-postgre
+  version: 0.1.0
+digest: sha256:18743e4bc5a97348bccc829fd48f9a4e062a2744ba11df106a08b050b91faf1c
+generated: "2023-05-14T14:23:43.0093895+02:00"
