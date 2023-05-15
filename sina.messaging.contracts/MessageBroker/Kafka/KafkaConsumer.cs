@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Confluent.Kafka;
@@ -57,18 +56,26 @@ namespace sina.messaging.contracts.MessageBroker.Kafka
                 var cancelToken = new CancellationTokenSource();
                 try {
                     while (true) {
-                        var consumer = consumerBuilder.Consume 
-                            (cancelToken.Token);
-                        Debug.WriteLine($"Message from kafka is: {consumer.Message.Value}");
-                        foreach (var eventsListener in eventsListeners)
+                        try
                         {
-                            eventsListener.SendEventMessage(consumer.Message.Value);
+                            var consumeResult = consumerBuilder.Consume 
+                                (cancelToken.Token);
+                            Debug.WriteLine($"Message from kafka is: {consumeResult.Message.Value}");
+                            foreach (var eventsListener in eventsListeners)
+                            {
+                                eventsListener.SendEventMessage(consumeResult.Message.Value);
+                            }
+                            // var orderRequest = JsonSerializer.Deserialize 
+                            //     <OrderProcessingRequest> 
+                            //     (consumer.Message.Value);
+                            // Debug.WriteLine($"Processing Order Id: 
+                            // {orderRequest.OrderId}");
                         }
-                        // var orderRequest = JsonSerializer.Deserialize 
-                        //     <OrderProcessingRequest> 
-                        //     (consumer.Message.Value);
-                        // Debug.WriteLine($"Processing Order Id: 
-                        // {orderRequest.OrderId}");
+                        catch (ConsumeException e)
+                        {
+                            Debug.WriteLine($"Exception during trying to consume topic: {topic}, Exception: {e}");
+                        }
+
                     }
                 } catch (OperationCanceledException) {
                     consumerBuilder.Close();
