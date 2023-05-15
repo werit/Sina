@@ -13,12 +13,13 @@
         </PackageReference>
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.0-preview.5.21321.1" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.0-preview5" />
-        <PackageReference Include="sina.messaging.contracts" Version="0.0.3" />
+<!--        <PackageReference Include="sina.messaging.contracts" Version="0.0.3" />-->
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\sina.endpoint.common\sina.endpoint.common.csproj" />
+      <ProjectReference Include="..\sina.messaging.contracts\sina.messaging.contracts.csproj" />
     </ItemGroup>
 
 </Project>
