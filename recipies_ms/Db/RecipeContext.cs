@@ -69,6 +69,12 @@ namespace recipies_ms.Db
             //Property Configurations
             modelBuilder.Entity<RecipeIngredientItem>()
                 .HasKey(ri => new {ri.RecipeItemId,ri.IngredientId});
+            
+            modelBuilder.Entity<Ingredient>()
+                .HasOne(e => e.ingredientNutritionalValue)
+                .WithOne(d => d.Ingredient)
+                .HasForeignKey<IngredientNutrition>(f => f.NutritionKey)
+                .IsRequired(false);
         }
 
 
@@ -227,15 +233,40 @@ namespace recipies_ms.Db
             return ingredientItem;
         }
 
-        public Task<RecordUpdateStatus> UpdateIngredientAsync(Ingredient ingredientItem, CancellationToken cancellationToken)
+        public async Task<RecordUpdateStatus> UpdateIngredientAsync(Ingredient ingredientItem, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (ingredientItem?.IngredientKey == null || string.IsNullOrEmpty(ingredientItem.IngredientName))
+            {
+                throw new ArgumentNullException($"{nameof(ingredientItem)} cannot be null and neiter its id or name.");
+            }
+
+            Entry(ingredientItem).State = EntityState.Modified;
+
+            if (ingredientItem.ingredientNutritionalValue != null)
+                Entry(ingredientItem.ingredientNutritionalValue).State =
+                    NutritionItemExists(ingredientItem.ingredientNutritionalValue.NutritionKey)
+                        ? EntityState.Modified
+                        : EntityState.Added;
+            try
+            {
+                await SaveChangesAsync(cancellationToken);
+                return RecordUpdateStatus.Updated;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!IngredientItemExists(ingredientItem.IngredientKey))
+                {
+                    return RecordUpdateStatus.NotFound;
+                }
+
+                throw;
+            }
         }
 
         public async Task<Ingredient> GetIngredientByKeyAsync(Guid ingredientKey, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await Ingredients
+            return await Ingredients.Include(x=>x.ingredientNutritionalValue)
                 .SingleOrDefaultAsync(ing => ing.IngredientKey == ingredientKey, cancellationToken);
 
         }
@@ -248,6 +279,14 @@ namespace recipies_ms.Db
         public Task<IEnumerable<Ingredient>> GetIngredientsAsync(CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
+        }
+        private bool IngredientItemExists(Guid id)
+        {
+            return Ingredients.Any(e => e.IngredientKey == id);
+        }
+        private bool NutritionItemExists(Guid id)
+        {
+            return Ingredients.Any(e => e.ingredientNutritionalValue.NutritionKey == id);
         }
     }
 }

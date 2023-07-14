@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using recipies_ms.Db;
@@ -9,9 +10,10 @@ using recipies_ms.Db;
 namespace recipies_ms.Migrations
 {
     [DbContext(typeof(RecipeContext))]
-    partial class RecipeContextModelSnapshot : ModelSnapshot
+    [Migration("20230625115058_IngredietnNutrition")]
+    partial class IngredietnNutrition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,14 +56,6 @@ namespace recipies_ms.Migrations
                         .HasColumnType("real")
                         .HasColumnName("fat_content_percentage");
 
-                    b.Property<float>("FibrePercentageContent")
-                        .HasColumnType("real")
-                        .HasColumnName("fibre_content_percentage");
-
-                    b.Property<float>("KjEnergyContent")
-                        .HasColumnType("real")
-                        .HasColumnName("kj_energy_content");
-
                     b.Property<float>("ProteinPercentageContent")
                         .HasColumnType("real")
                         .HasColumnName("protein_content_percentage");
@@ -69,10 +63,6 @@ namespace recipies_ms.Migrations
                     b.Property<float>("SaccharidesPercentageContent")
                         .HasColumnType("real")
                         .HasColumnName("saccharides_content_percentage");
-
-                    b.Property<float>("SaltPercentageContent")
-                        .HasColumnType("real")
-                        .HasColumnName("salt_content_percentage");
 
                     b.Property<string>("Unit")
                         .IsRequired()

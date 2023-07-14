@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using recipies_ms.Db;
-using recipies_ms.Web.Dto;
 using recipies_ms.Web.Dto.IngredientDtos;
 using sina.endpoint.common.Web.Dto;
 
@@ -71,6 +70,35 @@ namespace recipies_ms.Controllers
             }
 
             return Ok(new IngredientReturnDto(ingredientItemDto));
+        }
+
+        [ProducesResponseType(typeof(ResponseMessageDto), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPut("update/{id:guid}")]
+        // TODO: Add test
+        public async Task<IActionResult> PutIngredientItemAsync(Guid id, IngredientPutDto ingredientItem,
+            CancellationToken cancellationToken)
+        {
+            if (ingredientItem?.IngredientKey == null || id != ingredientItem.IngredientKey)
+            {
+                return BadRequest(
+                    $"{nameof(ingredientItem)} is either empty or {nameof(id)} does not correlate to {nameof(ingredientItem.IngredientKey)}");
+            }
+            
+            var updateStatus = await dbContext.UpdateIngredientAsync(ingredientItem.ToIngredient(), cancellationToken);
+            
+            switch (updateStatus)
+            {
+                case RecordUpdateStatus.Updated:
+                    return NoContent();
+                case RecordUpdateStatus.NotFound:
+                    return NotFound();
+                default:
+                    logger.LogError("This place should not be reachable.");
+                    return NoContent();
+            }
+
         }
         
     }

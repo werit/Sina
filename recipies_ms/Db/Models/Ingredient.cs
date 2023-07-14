@@ -21,6 +21,9 @@ namespace recipies_ms.Db.Models
 
         [Column("recipe_ingredient")]
         public ICollection<RecipeIngredientItem> recipeIngredientItem { get; set; }
+        
+        [Column("ingredient_nutrition")]
+        public IngredientNutrition? ingredientNutritionalValue { get; set; }
 
     }
 }
