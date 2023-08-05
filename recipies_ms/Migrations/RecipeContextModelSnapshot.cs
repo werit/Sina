@@ -171,6 +171,29 @@ namespace recipies_ms.Migrations
                         });
                 });
 
+            modelBuilder.Entity("recipies_ms.Db.Models.UnitConversion", b =>
+                {
+                    b.Property<string>("SiUnitSource")
+                        .HasColumnType("text")
+                        .HasColumnName("si_unit_source");
+
+                    b.Property<string>("SiUnitTarget")
+                        .HasColumnType("text")
+                        .HasColumnName("si_unit_target");
+
+                    b.Property<float>("AmountSource")
+                        .HasColumnType("real")
+                        .HasColumnName("amount_source");
+
+                    b.Property<float>("AmountTarget")
+                        .HasColumnType("real")
+                        .HasColumnName("amount_target");
+
+                    b.HasKey("SiUnitSource", "SiUnitTarget");
+
+                    b.ToTable("unit_conversion_rel");
+                });
+
             modelBuilder.Entity("sina.messaging.contracts.RecipeScheduleCreated", b =>
                 {
                     b.Property<Guid>("ScheduleId")

@@ -65,6 +65,8 @@ namespace recipies_ms.Db
         
         public DbSet<Unit> Units { get; set; }
         
+        public DbSet<UnitConversion> UnitConversion { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //Write Fluent API configurations here
@@ -81,8 +83,14 @@ namespace recipies_ms.Db
 
             modelBuilder.Entity<Unit>().Property(u => u.SiUnit).HasConversion<string>();
 
+            // Populating Units from Enum to the Db table 
             modelBuilder.Entity<Unit>()
                 .HasData(Enum.GetValues(typeof(SiUnit)).Cast<SiUnit>().Select(s => new Unit { SiUnit = s }));
+            
+            modelBuilder.Entity<UnitConversion>().Property(uc => uc.SiUnitSource).HasConversion<string>();
+            modelBuilder.Entity<UnitConversion>().Property(uc => uc.SiUnitTarget).HasConversion<string>();
+
+            modelBuilder.Entity<UnitConversion>().HasKey(uc => new { uc.SiUnitSource, uc.SiUnitTarget });
             
             base.OnModelCreating(modelBuilder);
         }
