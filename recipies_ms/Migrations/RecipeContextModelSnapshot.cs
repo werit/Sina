@@ -134,6 +134,43 @@ namespace recipies_ms.Migrations
                     b.ToTable("recipe");
                 });
 
+            modelBuilder.Entity("recipies_ms.Db.Models.Unit", b =>
+                {
+                    b.Property<string>("SiUnit")
+                        .HasColumnType("text")
+                        .HasColumnName("si_unit");
+
+                    b.HasKey("SiUnit");
+
+                    b.ToTable("unit");
+
+                    b.HasData(
+                        new
+                        {
+                            SiUnit = "Milliliter"
+                        },
+                        new
+                        {
+                            SiUnit = "Cup"
+                        },
+                        new
+                        {
+                            SiUnit = "Piece"
+                        },
+                        new
+                        {
+                            SiUnit = "TeaSpoon"
+                        },
+                        new
+                        {
+                            SiUnit = "TableSpoon"
+                        },
+                        new
+                        {
+                            SiUnit = "Gram"
+                        });
+                });
+
             modelBuilder.Entity("sina.messaging.contracts.RecipeScheduleCreated", b =>
                 {
                     b.Property<Guid>("ScheduleId")

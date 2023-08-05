@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using recipies_ms.Db.Models;
+using recipies_ms.Db.Models.Enums;
 using sina.messaging.contracts;
 using sina.messaging.contracts.MessageBroker.Kafka;
 
@@ -62,6 +63,8 @@ namespace recipies_ms.Db
         
         public DbSet<Ingredient> Ingredients { get; set; }
         
+        public DbSet<Unit> Units { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //Write Fluent API configurations here
@@ -75,6 +78,13 @@ namespace recipies_ms.Db
                 .WithOne(d => d.Ingredient)
                 .HasForeignKey<IngredientNutrition>(f => f.NutritionKey)
                 .IsRequired(false);
+
+            modelBuilder.Entity<Unit>().Property(u => u.SiUnit).HasConversion<string>();
+
+            modelBuilder.Entity<Unit>()
+                .HasData(Enum.GetValues(typeof(SiUnit)).Cast<SiUnit>().Select(s => new Unit { SiUnit = s }));
+            
+            base.OnModelCreating(modelBuilder);
         }
 
 
