@@ -168,6 +168,18 @@ namespace recipies_ms.Migrations
                         new
                         {
                             SiUnit = "Gram"
+                        },
+                        new
+                        {
+                            SiUnit = "Oz"
+                        },
+                        new
+                        {
+                            SiUnit = "Pound"
+                        },
+                        new
+                        {
+                            SiUnit = "FlOz"
                         });
                 });
 
@@ -192,6 +204,64 @@ namespace recipies_ms.Migrations
                     b.HasKey("SiUnitSource", "SiUnitTarget");
 
                     b.ToTable("unit_conversion_rel");
+
+                    b.HasData(
+                        new
+                        {
+                            SiUnitSource = "Cup",
+                            SiUnitTarget = "TeaSpoon",
+                            AmountSource = 1f,
+                            AmountTarget = 50f
+                        },
+                        new
+                        {
+                            SiUnitSource = "Cup",
+                            SiUnitTarget = "TableSpoon",
+                            AmountSource = 1f,
+                            AmountTarget = 16.67f
+                        },
+                        new
+                        {
+                            SiUnitSource = "Cup",
+                            SiUnitTarget = "Milliliter",
+                            AmountSource = 1f,
+                            AmountTarget = 250f
+                        },
+                        new
+                        {
+                            SiUnitSource = "Cup",
+                            SiUnitTarget = "FlOz",
+                            AmountSource = 1f,
+                            AmountTarget = 8.8f
+                        },
+                        new
+                        {
+                            SiUnitSource = "Cup",
+                            SiUnitTarget = "Gram",
+                            AmountSource = 1f,
+                            AmountTarget = 250f
+                        },
+                        new
+                        {
+                            SiUnitSource = "Cup",
+                            SiUnitTarget = "Oz",
+                            AmountSource = 0.1134f,
+                            AmountTarget = 1f
+                        },
+                        new
+                        {
+                            SiUnitSource = "Oz",
+                            SiUnitTarget = "Gram",
+                            AmountSource = 1f,
+                            AmountTarget = 28.35f
+                        },
+                        new
+                        {
+                            SiUnitSource = "Oz",
+                            SiUnitTarget = "Pound",
+                            AmountSource = 1f,
+                            AmountTarget = 0.0625f
+                        });
                 });
 
             modelBuilder.Entity("sina.messaging.contracts.RecipeScheduleCreated", b =>
@@ -227,7 +297,8 @@ namespace recipies_ms.Migrations
                 {
                     b.HasOne("recipies_ms.Db.Models.Ingredient", "Ingredient")
                         .WithOne("ingredientNutritionalValue")
-                        .HasForeignKey("recipies_ms.Db.Models.IngredientNutrition", "NutritionKey");
+                        .HasForeignKey("recipies_ms.Db.Models.IngredientNutrition", "NutritionKey")
+                        .IsRequired();
 
                     b.Navigation("Ingredient");
                 });

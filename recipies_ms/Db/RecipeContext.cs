@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using recipies_ms.Db.Models;
+using recipies_ms.Db.Models.DataGeneration;
 using recipies_ms.Db.Models.Enums;
 using sina.messaging.contracts;
 using sina.messaging.contracts.MessageBroker.Kafka;
@@ -91,6 +92,8 @@ namespace recipies_ms.Db
             modelBuilder.Entity<UnitConversion>().Property(uc => uc.SiUnitTarget).HasConversion<string>();
 
             modelBuilder.Entity<UnitConversion>().HasKey(uc => new { uc.SiUnitSource, uc.SiUnitTarget });
+
+            modelBuilder.Entity<UnitConversion>().HasData(UnitConversionGenerator.GenerateUnitConversionData());
             
             base.OnModelCreating(modelBuilder);
         }
