@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using recipies_ms.Db.Models.Enums;
 
 namespace recipies_ms.Db.Models
 {
@@ -18,7 +19,7 @@ namespace recipies_ms.Db.Models
 
         [Required(AllowEmptyStrings = false)]
         [Column("unit")]
-        public string Unit { get; set; }
+        public SiUnit Unit { get; set; }
         
         [Column("fat_content_percentage")]
         public float FatContentPercentageAmount { get; set; }

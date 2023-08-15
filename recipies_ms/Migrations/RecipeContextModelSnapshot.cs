@@ -155,15 +155,15 @@ namespace recipies_ms.Migrations
                         },
                         new
                         {
-                            SiUnit = "Piece"
-                        },
-                        new
-                        {
                             SiUnit = "TeaSpoon"
                         },
                         new
                         {
                             SiUnit = "TableSpoon"
+                        },
+                        new
+                        {
+                            SiUnit = "FlOz"
                         },
                         new
                         {
@@ -179,7 +179,7 @@ namespace recipies_ms.Migrations
                         },
                         new
                         {
-                            SiUnit = "FlOz"
+                            SiUnit = "Piece"
                         });
                 });
 
@@ -297,8 +297,7 @@ namespace recipies_ms.Migrations
                 {
                     b.HasOne("recipies_ms.Db.Models.Ingredient", "Ingredient")
                         .WithOne("ingredientNutritionalValue")
-                        .HasForeignKey("recipies_ms.Db.Models.IngredientNutrition", "NutritionKey")
-                        .IsRequired();
+                        .HasForeignKey("recipies_ms.Db.Models.IngredientNutrition", "NutritionKey");
 
                     b.Navigation("Ingredient");
                 });

@@ -64,6 +64,8 @@ namespace recipies_ms.Db
         
         public DbSet<Ingredient> Ingredients { get; set; }
         
+        public DbSet<IngredientNutrition> IngredientNutrition { get; set; }
+        
         public DbSet<Unit> Units { get; set; }
         
         public DbSet<UnitConversion> UnitConversion { get; set; }
@@ -83,6 +85,7 @@ namespace recipies_ms.Db
                 .IsRequired(false);
 
             modelBuilder.Entity<Unit>().Property(u => u.SiUnit).HasConversion<string>();
+            modelBuilder.Entity<IngredientNutrition>().Property(iu => iu.Unit).HasConversion<string>();
 
             // Populating Units from Enum to the Db table 
             modelBuilder.Entity<Unit>()

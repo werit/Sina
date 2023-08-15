@@ -1,5 +1,6 @@
 ﻿using System;
 using recipies_ms.Db.Models;
+using recipies_ms.Db.Models.Enums;
 
 namespace recipies_ms.Web.Dto.IngredientDtos
 {
@@ -7,7 +8,7 @@ namespace recipies_ms.Web.Dto.IngredientDtos
     {
         public Guid IngredientNutritionKey { get; }
         public float Amount { get; }
-        public string Unit { get; }
+        public SiUnit Unit { get; }
         public float FatContentPercentageAmount { get; }
         public float SaccharidesPercentageContent { get;}
         public float ProteinPercentageContent { get; }
